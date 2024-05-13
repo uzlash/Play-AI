@@ -5,7 +5,7 @@ import Progress from './Progress'
 import Invest from './Invest'
 import Time from './Time'
 import Manager from './Manager'
-import getTimeManager from '../../../managers/TimeManager'
+import getTimeManager from '../../../managers/timeManager'
 import Phaser from "phaser"
 import gs from '../../../config/gameStats'
 import utils from '../../../utils/utils'

@@ -1,3 +1,4 @@
+import Phaser from "phaser"
 
 const twelfthRootOfTwo = Math.pow(2, 1/12)
 

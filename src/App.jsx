@@ -1,14 +1,16 @@
-import LaunchScreen from "./components/LaunchScreen";
-import LoadingScreen from "./components/LoadingScreen";
+// import LaunchScreen from "./components/LaunchScreen";
+// import LoadingScreen from "./components/LoadingScreen";
 import GameplayScreen from "./components/GameplayScreen";
 import "./App.css";
+// import Game from "./components/game/index.jsx";
 
 function App() {
   return (
     <>
-      <LaunchScreen />
+      {/* <LaunchScreen /> */}
+      {/* <Game /> */}
       {/* <LoadingScreen /> */}
-      {/* <GameplayScreen /> */}
+      <GameplayScreen />
     </>
   );
 }

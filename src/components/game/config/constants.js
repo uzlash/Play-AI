@@ -32,6 +32,7 @@ const RUNNING_STATS = false
 const DAT_GUI_ENABLE = false
 
 const AFTER_BOOT_SCENE = 'gameScene'
+// const BUSINESS_KEYS = ['MINER',]
 const BUSINESS_KEYS = ['MINER', 'DRILL', 'TAVERN', 'FORGE', 'JEWELERY', 'TRADE', 'CASTLE', 'ARMY', 'QUEST']
 const BUSINESSES = {
   MINER: {
@@ -42,7 +43,7 @@ const BUSINESSES = {
     coefficient: 1.07,
     time: 0.6,
     revenue: 100,
-    managerCost: 100000,
+    managerCost: 1500000,
     managerKey: 'dwarf1',
     managerIndex: 0,
     coinsEmit: 4
@@ -51,11 +52,11 @@ const BUSINESSES = {
     business: 'Drill',
     icon: 'drill',
     sfx: 'sfxProduce',
-    cost: 6000,
+    cost: 2500000,
     coefficient: 1.15,
     time: 3,
     revenue: 6000,
-    managerCost: 1500000,
+    managerCost: 25000000,
     managerKey: 'dwarf2',
     managerIndex: 51,
     coinsEmit: 6
@@ -64,11 +65,11 @@ const BUSINESSES = {
     business: 'Tavern',
     icon: 'tavern',
     sfx: 'sfxTavernProduce',
-    cost: 72000,
+    cost: 10000000,
     coefficient: 1.14,
     time: 6,
     revenue: 54000,
-    managerCost: 10000000,
+    managerCost: 100000000,
     managerKey: 'dwarf1',
     managerIndex: 54,
     coinsEmit: 8
@@ -77,11 +78,11 @@ const BUSINESSES = {
     business: 'Forge',
     icon: 'forge',
     sfx: 'sfxForgeProduce',
-    cost: 864000,
+    cost: 50000000,
     coefficient: 1.13,
     time: 12,
     revenue: 432000,
-    managerCost: 50000000,
+    managerCost: 500000000,
     managerKey: 'dwarf2',
     managerIndex: 0,
     coinsEmit: 10
@@ -90,11 +91,11 @@ const BUSINESSES = {
     business: 'Jewelery',
     icon: 'jewelery',
     sfx: 'sfxJeweleryProduce',
-    cost: 10368000,
+    cost: 120000000,
     coefficient: 1.12,
     time: 24,
     revenue: 5184000,
-    managerCost: 120000000,
+    managerCost: 1200000000,
     managerKey: 'dwarf2',
     managerIndex: 6,
     coinsEmit: 12
@@ -103,11 +104,11 @@ const BUSINESSES = {
     business: 'Trade',
     icon: 'trade',
     sfx: 'sfxTradeProduce',
-    cost: 124416000,
+    cost: 1000000000,
     coefficient: 1.11,
     time: 96,
     revenue: 62208000,
-    managerCost: 1000000000,
+    managerCost: 10000000000,
     managerKey: 'dwarf1',
     managerIndex: 6,
     coinsEmit: 15
@@ -116,11 +117,11 @@ const BUSINESSES = {
     business: 'Castle',
     icon: 'castle',
     sfx: 'sfxProduce',
-    cost: 1492992000,
+    cost: 11111111100,
     coefficient: 1.10,
     time: 384,
     revenue: 746496000,
-    managerCost: 11111111100,
+    managerCost: 111111111000,
     managerKey: 'dwarf2',
     managerIndex: 57,
     coinsEmit: 20
@@ -129,11 +130,11 @@ const BUSINESSES = {
     business: 'Army',
     icon: 'army',
     sfx: 'sfxArmyProduce',
-    cost: 17915904000,
+    cost: 55555555500,
     coefficient: 1.09,
     time: 1536,
     revenue: 8957952000,
-    managerCost: 55555555500,
+    managerCost: 555555555000,
     managerKey: 'dwarf2',
     managerIndex: 3,
     coinsEmit: 30
@@ -142,11 +143,11 @@ const BUSINESSES = {
     business: 'Quest',
     icon: 'quest',
     sfx: 'sfxQuestProduce',
-    cost: 214990848000,
+    cost: 1000000000000,
     coefficient: 1.08,
     time: 6144,
     revenue: 107495424000,
-    managerCost: 1000000000000,
+    managerCost: 10000000000000,
     managerKey: 'dwarf2',
     managerIndex: 54,
     coinsEmit: 50
@@ -172,14 +173,14 @@ const TRIGGERS = {
   TUTO_D: {
     text: 'We can get more gold if we use a mechanical drill!\nBuy one!',
     watch: 'game.money',
-    condition: 6000,
+    condition: 2500000,
     arrow: 'DRILL.invest',
     nextTrigger: 'TUTO_E'
   },
   TUTO_E: {
     text: 'Tired of crushing rocks? Hire a foreman to do it!',
     watch: 'game.money',
-    condition: 100000,
+    condition: 1500000,
     arrow: 'MINER.manager'
   }
 }

@@ -4,18 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --force",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tma.js/sdk": "^2.0.0",
+    "dat.gui": "^0.7.9",
     "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
-    "phaser": "^3.80.1",
+    "phaser": "^3.23.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.4.1"
+    "react-hot-toast": "^2.4.1",
+    "stats.js": "^0.17.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

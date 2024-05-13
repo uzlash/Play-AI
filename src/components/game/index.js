@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import 'phaser'
 
 import constants from './config/constants'
@@ -17,18 +18,19 @@ import PauseScene from './scenes/ui/pause'
 
 import getSceneManager from './managers/sceneManager'
 import getDataManager from './managers/dataManager'
-import getTimeManager from './managers/TimeManager'
+import getTimeManager from './managers/timeManager'
 
 
 import gs from './config/gameStats'
 import tunner from './utils/tunner'
 import serverConnector from './utils/serverConnector'
+import Phaser from 'phaser'
 
 // load Data
 getTimeManager().start()
 
 
-window.game = new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.WEBGL,
   width: constants.WIDTH,
   height: constants.HEIGHT,
