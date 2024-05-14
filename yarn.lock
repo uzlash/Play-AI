@@ -505,6 +505,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@remix-run/router@1.16.1":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.16.1.tgz#73db3c48b975eeb06d0006481bde4f5f2d17d1cd"
+  integrity sha512-es2g3dq6Nb07iFxGk5GuHN20RwBZOsuDQN7izWIisUcv9r+d2C5jQxqmgkdebXgReWfiyUabcki6Fg77mSNrig==
+
 "@rollup/rollup-android-arm-eabi@4.17.2":
   version "4.17.2"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.17.2.tgz#1a32112822660ee104c5dd3a7c595e26100d4c2d"
@@ -585,10 +590,22 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.17.2.tgz#5a2d08b81e8064b34242d5cc9973ef8dd1e60503"
   integrity sha512-TGGO7v7qOq4CYmSBVEYpI1Y5xDuCEnbVC5Vth8mOsW0gDSzxNrVERPc790IGHsrT2dQSimgMr9Ub3Y1Jci5/8w==
 
-"@tma.js/sdk@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@tma.js/sdk/-/sdk-2.0.0.tgz#c3d26ca19ba2b167db0da95e5d4fc05a4f128a06"
-  integrity sha512-fj63SpZLONXZAIz+O8UuwxQ/pMxeqyWvjbY6MnefpFETaoqCLPezmlDVreejzGh9zPtLCzLIW2Fjvawtucpd4w==
+"@tma.js/react-router-integration@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@tma.js/react-router-integration/-/react-router-integration-1.0.1.tgz#48b299a1adb194af86ae7cc2108d947e8fe9eaed"
+  integrity sha512-fhDyBTvKmAPlMrAD9FTsapMY0Y8JU/1Z7Z0S6wd5LlUJuZTmKAhwIrPLO2nCWBoAzgo8LhQutEl/P5tXOVDqCA==
+
+"@tma.js/sdk-react@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@tma.js/sdk-react/-/sdk-react-2.1.1.tgz#f92f0e153d14074d671922262359541fc5b15807"
+  integrity sha512-XoKaBi9NMQuvvcHiNgZ6oHWa4LJxGOzeM7tgIpCKQ2RElDIv8YSAWN/8e34QsGO2SuDUCAXB5rC2VS5DdT3QMw==
+  dependencies:
+    "@tma.js/sdk" "2.0.1"
+
+"@tma.js/sdk@2.0.1", "@tma.js/sdk@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@tma.js/sdk/-/sdk-2.0.1.tgz#e44e65227ec63bfbc1ec2a31ca138bbff304b72b"
+  integrity sha512-Egt8VS9WASA+y7IPEALK3dQCGN0F+CkwRpvj3PGYpFjVD+4W4styMVSh8xS69MkQlcgN7/4Z15gRcvE4OwZd2g==
 
 "@types/babel__core@^7.20.5":
   version "7.20.5"
@@ -2404,6 +2421,21 @@ react-refresh@^0.14.0:
   version "0.14.2"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.2.tgz#3833da01ce32da470f1f936b9d477da5c7028bf9"
   integrity sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==
+
+react-router-dom@^6.23.1:
+  version "6.23.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.23.1.tgz#30cbf266669693e9492aa4fc0dde2541ab02322f"
+  integrity sha512-utP+K+aSTtEdbWpC+4gxhdlPFwuEfDKq8ZrPFU65bbRJY+l706qjR7yaidBpo3MSeA/fzwbXWbKBI6ftOnP3OQ==
+  dependencies:
+    "@remix-run/router" "1.16.1"
+    react-router "6.23.1"
+
+react-router@6.23.1:
+  version "6.23.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.23.1.tgz#d08cbdbd9d6aedc13eea6e94bc6d9b29cb1c4be9"
+  integrity sha512-fzcOaRF69uvqbbM7OhvQyBTFDVrrGlsFdS3AL+1KfIBtGETibHzi3FkoTRyiDJnWNc2VxrfvR+657ROHjaNjqQ==
+  dependencies:
+    "@remix-run/router" "1.16.1"
 
 react@^18.2.0:
   version "18.3.1"
