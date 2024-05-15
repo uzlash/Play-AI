@@ -118,22 +118,17 @@ const StakingTierComponent = () => {
           </button>
         </div>
         <div className="flex justify-center">
-          <button
+          <div
             style={{ zIndex: 1 }}
             type="button"
             className="
               w-5/6 
               bg-gray-900 
               stroke-[#a86a4b]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
               font-medium rounded-lg
               px-10
               py-2.5
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
+              text-center
               drop-shadow-xl
               text-2xl
               bordered-text-font
@@ -158,7 +153,7 @@ const StakingTierComponent = () => {
               <img src="/invite.png" height={48} width='auto' />
               <span className="text-sm text-left text-white mt-4 mb-2">Invite</span>
             </div>
-          </button>
+          </div>
         </div>
         <img src="bg-land.png" className="w-full absolute left-0 bottom-0" />
       </div>

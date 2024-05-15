@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "./common/btn";
+
 const StakingTierComponent = () => {
   return (
     <section className="h-screen bg-[#A86A4B]">
@@ -16,106 +18,11 @@ const StakingTierComponent = () => {
             Are you ready to make a difference while having fun? Start tapping
             and training our AI bot today!
           </p>
-          <button
-            type="button"
-            className="
-              w-4/5 
-              text-gray-900 
-              bg-[#FBC45F]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-5 
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl
-              text-2xl
-              bordered-text-font
-              border-b-4 border-gray-900
-              "
-          >
-            Start Game
-          </button>
+          <Button text={"Start Game"} />
           <div className="mt-6 w-4/5 flex justify-between">
-            <button
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-4
-              md:px-10
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-800
-              "
-            >
-              Telegram
-            </button>
-            <button
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-4
-              md:px-10
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-800
-              "
-            >
-              Website
-            </button>
-            <button
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-4
-              md:px-10
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-800
-              "
-            >
-              Discord
-            </button>
+            <Button text={"Telegram"} />
+            <Button text={"Website"} />
+            <Button text={"Discord"} />
           </div>
         </div>
         <img src="bg-land.png" className="w-full absolute left-0 bottom-0" />
