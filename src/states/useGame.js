@@ -7,6 +7,7 @@ const gameStat = {
   currentLevel: 1,
   levelData: {
     level: 1,
+    name: "name",
     points: 0,
     maxPoints: 5000,
   },
@@ -44,18 +45,44 @@ export default create(
         // ensure gamestat.energy is greater than damage
         //increament gamestat.point and gamestate.leveData.point by gamestat.damage
         //decresment gamestat.energy by gamestate.damage
-        const { energy, damage, points, levelData } = get();
+        //if levelData.points == levelData.maxPoint, upgrade their level. reset levelData.points to 0, then maxPoint to config.level[CurrentLevel].maxPoint and config.level[CurrentLevel].bonus to pinta then increment currentLevel
+        const { energy, damage, points, levelData, currentLevel, manager } = get();
 
         if (energy >= damage) {
-          set({
-            energy: energy - damage,
-            points: points + damage,
-            levelData: {
-              ...levelData,
-              points: levelData.points + damage
+          let newPoints = points + damage;
+          let newLevelDataPoints = levelData.points + damage;
+          let newEnergy = energy - damage;
+          let newLevel = currentLevel;
+          if (newLevelDataPoints >= levelData.maxPoints) {
+            newLevelDataPoints = 0; 
+            newLevel++;
+
+            if (config.levels[newLevel - 1]) {
+              const nextLevelConfig = config.levels[newLevel - 1];
+              set(state => ({
+                points: newPoints + nextLevelConfig.bonus,
+                currentLevel: newLevel,
+                levelData: {
+                  ...state.levelData,
+                  level: nextLevelConfig.level,
+                  name: nextLevelConfig.name,
+                  points: newLevelDataPoints,
+                  maxPoints: nextLevelConfig.maxPoints
+                }
+              }));
             }
-          });
+          } else {
+            set({
+              energy: newEnergy,
+              points: newPoints,
+              levelData: {
+                ...levelData,
+                points: newLevelDataPoints
+              }
+            });
+          }
         }
+
       },
       recharge: () => {
         //ensure gameState.energy is less than gameState.energyCap
@@ -167,7 +194,7 @@ export default create(
           }));
         }
       },
-      rechargTurbo: () => {
+      rechargeTurbo: () => {
         //ensure freeBoosts.turboLastActivatedAt > 24hrs or turboAmountLastRechargeDate > 24hrs
         //increament freeBoosts.turboCount to freeBoosts.maxTurbo
         //set turboAmountLastRechargeDate to date now
@@ -213,3 +240,85 @@ export default create(
     }
   )
 );
+
+const config = {
+  levels: [
+    {
+      level: 1,
+      maxPoints: 5000,
+      name: ' ',
+      desc: ' ',
+      bonus: 10000
+    },
+    {
+      level: 2,
+      maxPoints: 200000,
+      name: ' ',
+      desc: ' ',
+      bonus: 50000
+    },
+    {
+      level: 1,
+      maxPoints: 2000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 100000
+    },
+    {
+      level: 1,
+      maxPoints: 3000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 500000
+    },
+    {
+      level: 1,
+      maxPoints: 4000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 1000000
+    },
+    {
+      level: 1,
+      maxPoints: 6000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 1500000
+    },
+    {
+      level: 1,
+      maxPoints: 8000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 2000000
+    },
+    {
+      level: 1,
+      maxPoints: 10000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 3000000
+    },
+    {
+      level: 1,
+      maxPoints: 13000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 4500000
+    },
+    {
+      level: 1,
+      maxPoints: 16000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 6000000
+    },
+    {
+      level: 1,
+      maxPoints: 20000000,
+      name: ' ',
+      desc: ' ',
+      bonus: 8000000
+    }
+  ],
+}

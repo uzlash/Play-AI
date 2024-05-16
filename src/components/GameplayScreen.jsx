@@ -2,16 +2,33 @@ import { useEffect } from "react";
 import useGame from "../states/useGame";
 
 export default function Game() {
-  const { points, currentLevel, levelData, manager, tap, recharge, } = useGame();
+  const { points, currentLevel, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill } = useGame();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       recharge();
+      rechargeTurbo();
+      rechargeRefill()
     }, 1000);
 
-    return () => clearInterval(intervalId); 
-  }, [recharge]);
+    return () => clearInterval(intervalId);
+  }, [recharge, rechargeTurbo, rechargeRefill]);
 
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = Date.now();
+      const autoTapDuration = manager.level * 60 * 1000;
+
+      if (manager.timeTriggered > now && (now - manager.timeTriggered) < autoTapDuration) {
+        tap();
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [manager, tap]);
+
+  
   return (
     <section className="h-screen bg-[#A86A4B]">
       <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
