@@ -1,8 +1,10 @@
 "use client";
 
+import { useNavigate } from "react-router-dom";
 import Button from "./common/btn";
 
 const StakingTierComponent = () => {
+  const route = useNavigate()
   return (
     <section className="h-screen bg-[#A86A4B]">
       <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
@@ -18,7 +20,7 @@ const StakingTierComponent = () => {
             Are you ready to make a difference while having fun? Start tapping
             and training our AI bot today!
           </p>
-          <Button text={"Start Game"} />
+          <Button text={"Start Game"} onClick={() => route("/play")} />
           <div className="mt-6 w-4/5 flex justify-between">
             <Button text={"Telegram"} />
             <Button text={"Website"} />

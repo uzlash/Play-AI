@@ -13,11 +13,11 @@
   /* background-color: #f43f5e; */
 }
 
-/* .bordered-text-font {
+.bordered-text-font {
   font-family: 'Jockey One';
-} */
+}
 
-/* .bordered-text {
+.bordered-text {
   font-size: 24px;
   color: #FBC45F;
   text-shadow:
@@ -26,4 +26,4 @@
     -1px 1px #fff,
     1px 1px #fff,
     0px 0px black;
-} */
+}
