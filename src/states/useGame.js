@@ -46,7 +46,7 @@ export default create(
         //increament gamestat.point and gamestate.leveData.point by gamestat.damage
         //decresment gamestat.energy by gamestate.damage
         //if levelData.points == levelData.maxPoint, upgrade their level. reset levelData.points to 0, then maxPoint to config.level[CurrentLevel].maxPoint and config.level[CurrentLevel].bonus to pinta then increment currentLevel
-        const { energy, damage, points, levelData, currentLevel, manager } = get();
+        const { energy, damage, points, levelData, currentLevel } = get();
 
         if (energy >= damage) {
           let newPoints = points + damage;
