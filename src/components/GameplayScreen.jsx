@@ -1,18 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGame from "../states/useGame";
+import ManagerButton from "./manager";
 
 export default function Game() {
-  const { points, currentLevel, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill } = useGame();
+  const { points, currentLevel, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager } = useGame();
+  const [showManagerButton, setShowManagerButton] = useState(false);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       recharge();
       rechargeTurbo();
       rechargeRefill()
+
+      const now = Date.now();
+      if (manager.level > 0 && (now - manager.timeTriggered) > 60000) {
+        setShowManagerButton(true);
+      } else {
+        setShowManagerButton(false);
+      }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [recharge, rechargeTurbo, rechargeRefill]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   useEffect(() => {
@@ -28,7 +38,6 @@ export default function Game() {
     return () => clearInterval(intervalId);
   }, [manager, tap]);
 
-  
   return (
     <section className="h-screen bg-[#A86A4B]">
       <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
@@ -184,6 +193,7 @@ export default function Game() {
           </div>
         </div>
         <img src="bg-land.png" className="w-full absolute left-0 bottom-0" />
+        {showManagerButton && <ManagerButton show={showManagerButton} onClick={startManager} />}
       </div>
     </section>
   );

@@ -231,7 +231,21 @@ export default create(
           }));
         }
 
-      }
+      },
+      startManager: () => {
+        const { manager } = get();
+        const now = Date.now();
+        const autoTapDuration = manager.level * 60 * 1000;
+
+        if (now - manager.timeTriggered >= autoTapDuration) {
+          set(state => ({
+            manager: {
+              ...state.manager,
+              timeTriggered: now,
+            }
+          }));
+        }
+      },
 
     }),
     {
