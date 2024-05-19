@@ -3,7 +3,7 @@
 const StakingTierComponent = () => {
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
+      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
         <div className="flex flex-col items-center mb-10">
           <button
             type="button"
