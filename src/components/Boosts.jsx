@@ -1,16 +1,28 @@
 "use client";
+import { Button, Modal } from "flowbite-react";
+import { useState } from "react";
+
+import ButtomNav from "./Navbar/ButtomNav";
+import sword from "../assets/sword.svg";
+import energy from "../assets/energy.svg";
+import potion from "../assets/potion.svg";
+import roboto from "../assets/roboto.svg";
 
 const BoostsComponent = () => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const boosts = [
+    { name: "Multi Slash", price: "$500", level: "LVL 2", image: sword },
+    { name: "Power Threshold", price: "$500", level: "LVL 2", image: potion },
+    { name: "Recharge Speed", price: "$500", level: "LVL 2", image: energy },
+    { name: "Hire Miner", price: "$500", level: "LVL 2", image: roboto },
+  ];
+
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
-        <div className="pl-8">
-          <img src="/back.png" height={50} width={50} />
-        </div>
+      <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
         <div className="mt-4">
-          <p className="text-xs text-center text-gray-400">
-            Your Coins Balance
-          </p>
+          <p className="text-xs text-center text-gray-400">Your Balance</p>
         </div>
         <div
           className="
@@ -22,35 +34,10 @@ const BoostsComponent = () => {
               mt-2
               flex justify-center items-center"
         >
-          <img src="/gem.png" height={50} width={50} />
-          <span className="ml-2 text-white text-4xl">240</span>
-        </div>
-        <div className="flex justify-center my-4">
-          <button
-            type="button"
-            className="
-              text-gray-900 
-              bg-[#FBC45F]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg 
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl
-              text-2xl
-              bordered-text-font
-              border-b-4 border-gray-900
-              px-2
-              "
-          >
-            How it works
-          </button>
+          <span className="ml-2 text-white text-4xl">$ 240,203.01</span>
         </div>
         <div className="pl-10 text-xl text-white font-medium pt-4">
-          Free Boosts
+          Free Boosts:
         </div>
         <div className="flex flex-col items-center">
           <div className="mt-2 w-4/5 flex justify-between">
@@ -73,11 +60,11 @@ const BoostsComponent = () => {
               text-base
               bordered-text-font
               border-2
-              border-b-[6px] border-gray-800
+              border-b-[6px] border-gray-950
               "
             >
               <div className="flex justify-center items-center">
-                <img src="/gem.png" height={25} width={25} />
+                <img src="/energy.svg" height={25} width={25} />
                 <div className="ml-2 flex flex-col text-white">
                   <span className="text-base text-left">TURBO</span>
                   <span className="text-base text-left text-[#F7BE38]">
@@ -105,11 +92,11 @@ const BoostsComponent = () => {
               text-base
               bordered-text-font
               border-2
-              border-b-[6px] border-gray-800
+              border-b-[6px] border-gray-950
               "
             >
               <div className="flex justify-center items-center">
-                <img src="/heart.png" height={25} width={25} />
+                <img src="/potion.svg" height={25} width={25} />
                 <div className="ml-2 flex flex-col text-white">
                   <span className="text-base text-left">RECHARGES</span>
                   <span className="text-base text-left text-[#F7BE38]">
@@ -120,85 +107,108 @@ const BoostsComponent = () => {
             </button>
           </div>
         </div>
-        <div className="pl-10 text-xl text-white font-medium pt-4">
-          Upgrades
-        </div>
+        <div className="pl-10 text-xl text-white font-medium pt-4">Boosts:</div>
         <div className="flex justify-center">
           <div
-            className="w-5/6 border-[1px] border-[#a86a4b] mt-4 rounded-md h-80 bg-gray-900 overflow-y-auto"
+            className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[314px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}
           >
-            {[...Array(10)].map((e, i) => (
+            {boosts.map((e, i) => (
               <div
                 key={i}
                 className="p-4 flex justify-between border-b-[2px] border-b-[#a86a4b]"
               >
                 <div className="flex justify-center items-center">
-                  <img src="/hammer.png" height={50} width={50} />
+                  <img src={e.image} height={35} width={35} />
                   <div className="ml-2 flex flex-col text-white">
                     <span className="text-lg text-left font-semibold">
-                      Damage
+                      {e.name}
                     </span>
                     <span className="text-xs font-[300] font-[Montserrat] text-left">
-                      2,000 - Level 2
+                      {e.price} - {e.level}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <img src="/padlock.png" height={15} width={20} />
+                <div
+                  onClick={() => setOpenModal(true)}
+                  className="flex items-center"
+                >
+                  <img src="/right.svg" height={15} width={20} />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        {/* <div className="flex justify-center">
-          <button
-            style={{ zIndex: 1 }}
-            type="button"
-            className="
-              w-5/6
-              bg-gray-900 
-              stroke-[#a86a4b]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-5
-              py-2.5
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl
-              text-2xl
-              bordered-text-font
-              border-2
-              border-b-4
-              border-[#a86a4b]
-              mt-5
-              flex
-              flex-col
-              "
+        <div className="flex items-center">
+          <Modal
+            show={openModal}
+            onClose={() => setOpenModal(false)}
+            theme={{
+              root: {
+                base: "fixed top-0 inset-x-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full",
+              },
+              // content: {
+              //   base: "relative h-full w-full p-4 md:h-auto",
+              //   inner:
+              //     "relative flex max-h-[90dvh] flex-col rounded-lg bg-white shadow dark:bg-gray-700",
+              // },
+              body: {
+                base: "flex-1 overflow-auto p-6 bg-black/[.99]",
+                popup: "pt-0",
+              },
+              header: {
+                base: "flex items-start justify-between rounded-t p-5 bg-black/[.99]",
+                popup: "border-b-0 p-2",
+                title: "text-xl font-medium text-gray-900 dark:text-white",
+                close: {
+                  base: "ml-auto inline-flex items-center rounded-lg text-[#fbc45f] border-2 border-[#fbc45f] rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white",
+                  icon: "h-5 w-5",
+                },
+              },
+            }}
           >
-            <h2 className="text-2xl text-white">ARIA</h2>
-            <p className="text-xs text-start text-gray-400">
-              In a world where AI is on a quest for knowledge and understanding,
-              you are chosen as a Guardian of Data, entrusted with the task of
-              feeding valuable text data to the AI. The AI, named "Aria," is a
-              curious and ambitious bot eager to learn, grow, and make a
-              positive impact on the world. Introduction: Welcome, Guardian! You
-              have been selected to embark on a unique journey with Aria, our AI
-              bot. Aria is a beacon of intelligence, innovation, and potential,
-              but she needs your help to learn and evolve. Objective: Your
-              mission is to feed Aria with text data through tapping, playing,
-              and interacting with the game. Every tap counts as a piece of
-              knowledge that Aria absorbs, analyzes, and uses to improve her
-              understanding and capabilities. Challenges: As you progress
-              through the game, you will encounter various challenges and
-              puzzles designed to test your skills, strategy, and creativity.
-            </p>
-          </button>
-        </div> */}
-        <img src="bg-land.png" className="w-full absolute left-0 bottom-0" />
+            <Modal.Header></Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <div className="flex justify-center items-center">
+                  <img src="./sword.svg" width={175} height={200} />
+                </div>
+                <h2 className="text-center text-2xl font-semibold text-white">
+                  Multi Slash
+                </h2>
+                <p className="text-xs text-center leading-relaxed text-white">
+                  Multiply your income by x5 for 20 Seconds. Do not use energy
+                  while active.
+                </p>
+              </div>
+              <div className="flex justify-center my-4">
+                <button
+                  type="button"
+                  className="
+                text-gray-900 
+                bg-[#FBC45F]
+                stroke-[#FAB135]
+                hover:bg-[#F7BE38]/90 
+                  focus:ring-4 
+                  focus:outline-none 
+                focus:ring-[#F7BE38]/50 
+                  font-medium rounded-lg 
+                  text-center 
+                dark:focus:ring-[#F7BE38]/50
+                  drop-shadow-xl
+                  text-2xl
+                  bordered-text-font
+                  border-b-4 border-gray-900
+                  px-10
+              "
+                >
+                  Get for free!!!
+                </button>
+              </div>
+            </Modal.Body>
+          </Modal>
+        </div>
+        <ButtomNav />
       </div>
     </section>
   );

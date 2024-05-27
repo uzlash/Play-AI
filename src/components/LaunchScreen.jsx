@@ -3,9 +3,9 @@
 const StakingTierComponent = () => {
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
-        <div className="flex justify-center">
-          <img src="/robot.svg" height={210} width={150} />
+      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
+        <div className="flex justify-center" style={{ zIndex: 1 }}>
+          <img src="/robot.svg" height={325} width={325} />
         </div>
         <div className="flex flex-col items-center">
           <h1 className="mt-14 font-normal text-6xl leading-[45px] bordered-text bordered-text-font">
@@ -17,6 +17,7 @@ const StakingTierComponent = () => {
             and training our AI bot today!
           </p>
           <button
+            style={{ zIndex: 1 }}
             type="button"
             className="
               w-4/5 
@@ -40,7 +41,10 @@ const StakingTierComponent = () => {
           >
             Start Game
           </button>
-          <div className="mt-6 w-4/5 flex justify-between">
+          <div
+            style={{ zIndex: 1 }}
+            className="mt-6 w-4/5 flex justify-between"
+          >
             <button
               type="button"
               className="
