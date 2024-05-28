@@ -1,26 +1,22 @@
-import LaunchScreen from "./components/LaunchScreen";
-import LoadingScreen from "./components/LoadingScreen";
-import GameplayScreen from "./components/GameplayScreen";
-import AboutCharacter from "./components/AboutCharacter";
-import Boosts from "./components/Boosts";
-import FriendsInvite from "./components/FriendsInvite";
-import League from "./components/League";
-import Task from "./components/Task";
-import Refer from "./components/Refer";
+import { routes } from "./routes";
+import {
+  Navigate,
+  Route,
+  // Router,
+  BrowserRouter as Router,
+  Routes,
+} from 'react-router-dom';
 import "./App.css";
 
 function App() {
   return (
     <>
-      {/* <LaunchScreen /> */}
-      {/* <LoadingScreen /> */}
-      {/* <GameplayScreen /> */}
-      {/* <AboutCharacter /> */}
-      {/* <Boosts /> */}
-      {/* <FriendsInvite /> */}
-      {/* <League /> */}
-      {/* <Task /> */}
-      <Refer />
+      <Router>
+        <Routes>
+          {routes.map((route) => <Route key={route.path} {...route} />)}
+          <Route path='*' element={<Navigate to='/' />} />
+        </Routes>
+      </Router>
     </>
   );
 }

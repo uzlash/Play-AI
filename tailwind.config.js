@@ -14,8 +14,13 @@ export default {
       animation: {
         marquee: "marquee 100s linear infinite",
         marquee2: "marquee2 100s linear infinite",
+        evaporate: 'evaporate 2s forwards',
       },
       keyframes: {
+        evaporate: {
+          '0%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '0', transform: 'translateY(-50px)' },
+        },
         marquee: {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },

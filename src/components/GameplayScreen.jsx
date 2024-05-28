@@ -1,18 +1,74 @@
-"use client";
 import ButtomNav from "./Navbar/ButtomNav";
+import { useEffect, useState } from "react";
+import useGame from "../states/useGame";
+import ManagerButton from "./manager";
 
-const StakingTierComponent = () => {
+export default function Game() {
+  const { points, damage, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap } = useGame();
+  const [showManagerButton, setShowManagerButton] = useState(false);
+  const [tapEffects, setTapEffects] = useState([]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      recharge();
+      rechargeTurbo();
+      rechargeRefill()
+
+      const now = Date.now();
+      if (manager.level > 0 && (now - manager.timeTriggered) > 60000) {
+        setShowManagerButton(true);
+      } else {
+        setShowManagerButton(false);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleTap(e) {
+    const x = e.clientX;
+    const y = e.clientY;
+
+
+    const newTapEffect = {
+      id: Date.now(),
+      x,
+      y,
+      damage
+    };
+
+    tap()
+    setTapEffects([...tapEffects, newTapEffect]);
+
+    setTimeout(() => {
+      setTapEffects((effects) => effects.filter((effect) => effect.id !== newTapEffect.id));
+    }, 1000);
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = Date.now();
+      const autoTapDuration = manager.level * 60 * 1000;
+
+      if (manager.timeTriggered > now && (now - manager.timeTriggered) < autoTapDuration) {
+        tap();
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [manager, tap]);
+
   return (
     <section className="h-screen bg-[#A86A4B]">
       <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
         <div className="flex flex-col items-center">
-          <button
+          <div
             type="button"
             className="
               w-4/5
               bg-gray-950 
               stroke-[#a86a4b]
-              hover:bg-[#F7BE38]/90 
               focus:ring-4 
               focus:outline-none 
               focus:ring-[#F7BE38]/50 
@@ -31,8 +87,8 @@ const StakingTierComponent = () => {
               flex justify-center items-center
               "
           >
-            <span className="ml-2 text-white">$ 240,203.01</span>
-          </button>
+            <span className="ml-2 text-white">$ {points}</span>
+          </div>
         </div>
         <div className="w-full flex justify-center">
           <div className="grid grid-cols-3 mb-4 w-4/5 center gap-2">
@@ -61,14 +117,14 @@ const StakingTierComponent = () => {
               <div className="flex justify-center items-center">
                 <img src="/crown.svg" height={16} width={16} />
                 <span className="text-xs ml-2 font-[300] font-[Montserrat] text-left text-[#DFAF56]">
-                  Normies {" >"}
+                  {levelData.name} {" >"}
                 </span>
               </div>
               <div className="flex justify-center items-center">
                 <img src="/coin.svg" height={16} width={16} />
                 <span className="text-xs ml-2 font-[Montserrat] text-left text-[#DFAF56]">
                   <span className="font-[600] mr-1">2,431</span>
-                  <span className="font-[300]">Tons</span>
+                  <span className="font-[300]">Gold</span>
                 </span>
               </div>
             </button>
@@ -94,30 +150,24 @@ const StakingTierComponent = () => {
               flex justify-around items-center
               "
             >
-              {/* <div className="flex justify-center items-center">
-              <img src="/cash.svg" height={16} width={16} />
-              <span className="text-sm text-left">Earn Tons</span>
-            </div> */}
               <div className="flex justify-center items-center">
                 <img src="/cash.svg" height={16} width={16} />
                 <span className="text-xs ml-2 font-[Montserrat] text-left text-white">
-                  <span className="font-[600] mr-1">Earn Tons</span>
+                  <span className="font-[600] mr-1">Earn Gold/Tons</span>
                 </span>
               </div>
             </button>
           </div>
         </div>
         <div className="flex justify-center my-4">
-          <img src="/robot.png" height="auto" width={'auto'} />
+          <img onClick={handleTap} src="/robot.png" height="auto" width={'auto'} />
         </div>
         <div className="flex justify-center">
-          <button
-            type="button"
+          <div
             className="
               w-5/6 
               bg-gray-950 
               stroke-[#a86a4b]
-              hover:bg-[#F7BE38]/90 
               focus:ring-4 
               focus:outline-none 
               focus:ring-[#F7BE38]/50 
@@ -137,19 +187,28 @@ const StakingTierComponent = () => {
               "
           >
             <img src="/energy.svg" height={25} width={25} />
-            <span className="ml-2 text-xs text-white">3250/5000</span>
+            <span className="ml-2 text-xs text-white">{energy}/{energyCap}</span>
             <div className="ml-4 w-full h-4 bg-gray-600 rounded-md dark:bg-gray-700">
               <div
                 className="h-4 bg-[#FAB135] rounded-md"
-                style={{ width: "70%" }}
+                style={{ width: `${(energy / energyCap) * 100}%` }}
               ></div>
             </div>
-          </button>
+          </div>
         </div>
         <ButtomNav />
+        {showManagerButton && <ManagerButton show={showManagerButton} onClick={startManager} />}
+        {tapEffects.map((effect) => (
+          <div
+            key={effect.id}
+            className="absolute text-white font-bold animate-evaporate"
+            style={{ left: effect.x, top: effect.y }}
+          >
+            +{effect.damage}
+          </div>
+        ))}
       </div>
     </section>
   );
-};
+}
 
-export default StakingTierComponent;
