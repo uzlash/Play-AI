@@ -101,7 +101,7 @@ export default create(
         //deduct cost from point,
         //increment rechargeSpeed by 1
         const { points, rechargeSpeed } = get();
-        const cost = rechargeSpeed === 1 ? 100 : 1000 * Math.pow(2, rechargeSpeed);
+        const cost = rechargeSpeed === 1 ? 100 : 1000 * Math.pow(2, rechargeSpeed-1);
 
         if (points >= cost) {
           set({
@@ -116,7 +116,7 @@ export default create(
         //deduct cost from point,
         //increment damage by 1
         const { points, damage } = get();
-        const cost = damage === 1 ? 100 : 1000 * Math.pow(2, damage);
+        const cost = damage === 1 ? 100 : 1000 * Math.pow(2, damage-1);
 
         if (points >= cost) {
           set({
@@ -133,7 +133,7 @@ export default create(
         //increment energyCap by 500
         const { points, energyCap } = get();
         const energyCapLevel = energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1;
-        const cost = energyCapLevel === 1 ? 100 : 1000 * Math.pow(2, energyCapLevel);
+        const cost = energyCapLevel === 1 ? 100 : 1000 * Math.pow(2, energyCapLevel-1);
 
         if (points >= cost) {
           set({
@@ -148,7 +148,7 @@ export default create(
         //deduct cost from point,
         //increment manager.level by 1
         const { points, manager } = get();
-        const cost = manager.level === 0 ? 25000 : 50000 * Math.pow(2, manager.level + 1);
+        const cost = manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1);
 
         if (points >= cost) {
           set({

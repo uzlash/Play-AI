@@ -1,15 +1,18 @@
 import ButtomNav from "./Navbar/ButtomNav";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useGame from "../states/useGame";
 import ManagerButton from "./manager";
 
 export default function Game() {
+  const route = useNavigate()
   const { points, damage, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap } = useGame();
   const [showManagerButton, setShowManagerButton] = useState(false);
   const [tapEffects, setTapEffects] = useState([]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
+      //TODO: handle in a global position.
       recharge();
       rechargeTurbo();
       rechargeRefill()
@@ -29,8 +32,6 @@ export default function Game() {
   function handleTap(e) {
     const x = e.clientX;
     const y = e.clientY;
-
-
     const newTapEffect = {
       id: Date.now(),
       x,
@@ -98,7 +99,6 @@ export default function Game() {
               col-span-2
               bg-gray-950 
               stroke-[#a86a4b]
-              hover:bg-[#F7BE38]/90 
               focus:ring-4 
               focus:outline-none 
               focus:ring-[#F7BE38]/50 
@@ -114,7 +114,7 @@ export default function Game() {
               flex justify-around items-center
               "
             >
-              <div className="flex justify-center items-center">
+              <div onClick={() => route("/league")} className="flex justify-center items-center">
                 <img src="/crown.svg" height={16} width={16} />
                 <span className="text-xs ml-2 font-[300] font-[Montserrat] text-left text-[#DFAF56]">
                   {levelData.name} {" >"}
@@ -153,7 +153,7 @@ export default function Game() {
               <div className="flex justify-center items-center">
                 <img src="/cash.svg" height={16} width={16} />
                 <span className="text-xs ml-2 font-[Montserrat] text-left text-white">
-                  <span className="font-[600] mr-1">Earn Gold/Tons</span>
+                  <span className="font-[600] mr-1">Earn Gold</span>
                 </span>
               </div>
             </button>
@@ -201,7 +201,7 @@ export default function Game() {
         {tapEffects.map((effect) => (
           <div
             key={effect.id}
-            className="absolute text-white font-bold animate-evaporate"
+            className="absolute text-white font-bold text-xl animate-evaporate"
             style={{ left: effect.x, top: effect.y }}
           >
             +{effect.damage}

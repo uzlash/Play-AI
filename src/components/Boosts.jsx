@@ -1,6 +1,7 @@
 "use client";
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useGame from "../states/useGame";
 
 import ButtomNav from "./Navbar/ButtomNav";
 import sword from "../assets/sword.svg";
@@ -8,15 +9,93 @@ import energy from "../assets/energy.svg";
 import potion from "../assets/potion.svg";
 import roboto from "../assets/roboto.svg";
 
-const BoostsComponent = () => {
+export default function BoostsComponent() {
+  const { points, freeBoosts, damage, claimTurbo, claimRefill, rechargeSpeed, energyCap, manager, upgradeRechargeSpeed, upgradeDamage, upgradeEnergyCap, upgradeManager } = useGame();
   const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState()
+
+  const calculateCost = (baseCost, currentLevel) => {
+    return currentLevel === 1 ? baseCost : 1000 * Math.pow(2, currentLevel-1);
+  };
 
   const boosts = [
-    { name: "Multi Slash", price: "$500", level: "LVL 2", image: sword },
-    { name: "Power Threshold", price: "$500", level: "LVL 2", image: potion },
-    { name: "Recharge Speed", price: "$500", level: "LVL 2", image: energy },
-    { name: "Hire Miner", price: "$500", level: "LVL 2", image: roboto },
+    {
+      name: "Multi Slash",
+      price: `$ ${calculateCost(100, damage)}`,
+      level: `LVL ${damage}`,
+      desc: `Increase your miners point to ${damage + 1} per mine`,
+      image: sword,
+      action: () => upgradeDamage(),
+      ref: "damage"
+    },
+    {
+      name: "Power Threshold",
+      price: `$ ${calculateCost(100, energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1)}`,
+      level: `LVL ${energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1}`,
+      desc: `Increase your power threshold to ${energyCap + 500}`,
+      image: potion,
+      action: () => upgradeEnergyCap(),
+      ref: "energyCap"
+    },
+    {
+      name: "Recharge Speed",
+      price: `$ ${calculateCost(100, rechargeSpeed)}`,
+      level: `LVL ${rechargeSpeed}`,
+      desc: `Increase Recharging speed to ${rechargeSpeed + 1} per second`,
+      image: energy,
+      action: () => upgradeRechargeSpeed(),
+      ref: "rechargeSpeed"
+    },
+    {
+      name: "Hire Miner",
+      price: `$${manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1)}`,
+      level: `LVL ${manager.level + 1}`,
+      desc: `Miner would mine on your behalf for ${manager.level + 1}mins every trigger.`,
+      image: roboto,
+      action: () => upgradeManager(),
+      ref: "manager"
+    },
   ];
+
+  function handleTurboBoost() {
+    setModalContent({
+      title: "Turbo Mode",
+      desc: "Multiply your income by x5 for 20 Seconds. Do not use energy while active",
+      btnText: "Get for free!!!",
+      action: () =>{handleCloseModal(); claimTurbo()},
+      image: "/potion.svg"
+    })
+  }
+
+  function handleRefillBoost() {
+    setModalContent({
+      title: "Recharge Power",
+      desc: "Recharge your Power to the max",
+      btnText: "Get for free!!!",
+      action: () => {handleCloseModal(); claimRefill()},
+      image: "/energy.svg"
+    })
+  }
+
+  function handleCloseModal() {
+    setOpenModal(false)
+    setModalContent(null)
+  }
+
+  function handleBoosters(boost) {
+    setModalContent({
+      title: boost.name,
+      desc: boost.desc,
+      btnText: `Get for ${boost.price}`,
+      action: () =>{handleCloseModal(); boost.action()},
+      image: boost.image,
+      price: Number(boost.price.slice(1))
+    })
+  }
+
+  useEffect(() => {
+    if (modalContent) setOpenModal(true)
+  }, [modalContent])
 
   return (
     <section className="h-screen bg-[#A86A4B]">
@@ -34,7 +113,7 @@ const BoostsComponent = () => {
               mt-2
               flex justify-center items-center"
         >
-          <span className="ml-2 text-white text-4xl">$ 240,203.01</span>
+          <span className="ml-2 text-white text-4xl">$ {points}</span>
         </div>
         <div className="pl-10 text-xl text-white font-medium pt-4">
           Free Boosts:
@@ -42,38 +121,7 @@ const BoostsComponent = () => {
         <div className="flex flex-col items-center">
           <div className="mt-2 w-4/5 flex justify-between">
             <button
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-6
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-950
-              "
-            >
-              <div className="flex justify-center items-center">
-                <img src="/energy.svg" height={25} width={25} />
-                <div className="ml-2 flex flex-col text-white">
-                  <span className="text-base text-left">TURBO</span>
-                  <span className="text-base text-left text-[#F7BE38]">
-                    3/3 Boosts
-                  </span>
-                </div>
-              </div>
-            </button>
-            <button
+              onClick={handleTurboBoost}
               type="button"
               className="
               text-white 
@@ -98,9 +146,42 @@ const BoostsComponent = () => {
               <div className="flex justify-center items-center">
                 <img src="/potion.svg" height={25} width={25} />
                 <div className="ml-2 flex flex-col text-white">
-                  <span className="text-base text-left">RECHARGES</span>
+                  <span className="text-base text-left">TURBO</span>
                   <span className="text-base text-left text-[#F7BE38]">
-                    3/3 Boosts
+                    {freeBoosts.turboCount}/{freeBoosts.maxTurbo} Boosts
+                  </span>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={handleRefillBoost}
+              type="button"
+              className="
+              text-white 
+              bg-[#A86A4B]
+              stroke-[#FAB135]
+              hover:bg-[#F7BE38]/90 
+              focus:ring-4 
+              focus:outline-none 
+              focus:ring-[#F7BE38]/50 
+              font-medium rounded-lg
+              px-6
+              py-2
+              text-center 
+              dark:focus:ring-[#F7BE38]/50
+              drop-shadow-xl 
+              text-base
+              bordered-text-font
+              border-2
+              border-b-[6px] border-gray-950
+              "
+            >
+              <div className="flex justify-center items-center">
+                <img src="/energy.svg" height={25} width={25} />
+                <div className="ml-2 flex flex-col text-white">
+                  <span className="text-base text-left">RECHARGE</span>
+                  <span className="text-base text-left text-[#F7BE38]">
+                    {freeBoosts.refillEnergyAmount}/{freeBoosts.maxRefillEnergyAmount} Boosts
                   </span>
                 </div>
               </div>
@@ -130,7 +211,7 @@ const BoostsComponent = () => {
                   </div>
                 </div>
                 <div
-                  onClick={() => setOpenModal(true)}
+                  onClick={() => handleBoosters(e)}
                   className="flex items-center"
                 >
                   <img src="/right.svg" height={15} width={20} />
@@ -142,7 +223,7 @@ const BoostsComponent = () => {
         <div className="flex items-center">
           <Modal
             show={openModal}
-            onClose={() => setOpenModal(false)}
+            onClose={handleCloseModal}
             theme={{
               root: {
                 base: "fixed top-0 inset-x-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full",
@@ -171,20 +252,22 @@ const BoostsComponent = () => {
             <Modal.Body>
               <div className="space-y-6">
                 <div className="flex justify-center items-center">
-                  <img src="./sword.svg" width={175} height={200} />
+                  <img src={modalContent?.image} width={175} height={200} />
                 </div>
                 <h2 className="text-center text-2xl font-semibold text-white">
-                  Multi Slash
+                  {modalContent?.title}
                 </h2>
                 <p className="text-xs text-center leading-relaxed text-white">
-                  Multiply your income by x5 for 20 Seconds. Do not use energy
-                  while active.
+                  {modalContent?.desc}
                 </p>
               </div>
               <div className="flex justify-center my-4">
                 <button
+                  disabled={modalContent?.price && points < modalContent.price}
+                  onClick={modalContent?.action}
                   type="button"
-                  className="
+                  className=" disabled:bg-transparent
+                  disabled:text-gray-500
                 text-gray-900 
                 bg-[#FBC45F]
                 stroke-[#FAB135]
@@ -202,7 +285,7 @@ const BoostsComponent = () => {
                   px-10
               "
                 >
-                  Get for free!!!
+                  {(modalContent?.price && points < modalContent.price) ? "Not Enoung Points": modalContent?.btnText}
                 </button>
               </div>
             </Modal.Body>
@@ -212,6 +295,6 @@ const BoostsComponent = () => {
       </div>
     </section>
   );
-};
+}
 
-export default BoostsComponent;
+
