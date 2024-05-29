@@ -6,31 +6,33 @@ export default function LaunchScreen() {
 
   //TODO: hnadlebutton clicks with tg api
   return (
-    <section className="max-h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
+    <section className="min-h-screen bg-[#A86A4B]">
+      <div className="min-h-screen h-fit relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
         <div className="flex justify-center" style={{ zIndex: 1 }}>
           <img src="/robot.svg" height={325} width={325} />
         </div>
         <div className="flex flex-col items-center">
-          <h1 className="mt-14 font-normal text-6xl leading-[45px] bordered-text bordered-text-font">
+          <h1 className="mt-10 font-normal text-6xl leading-[55px] bordered-text bordered-text-font">
             WELCOME <br />
             TO PLAYAI
           </h1>
-          <p className="my-7 w-60 text-white text-xs text-center font-[Montserrat]">
+          <p className="my-5 w-60 text-white text-xs text-center font-[Montserrat]">
             Are you ready to make a difference while having fun? Start tapping
             and training our AI bot today!
           </p>
-          <MainBtn text={'Start Game'} onClick={() => route("/play")} />
-          <div
-            style={{ zIndex: 1 }}
-            className="mt-6 w-4/5 flex justify-between"
-          >
-            <SmallBtn text={'Telegram'} />
-            <SmallBtn text={'Website'} />
-            <SmallBtn text={'Discord'} />
+          <div className="z-50 fixed bottom-10 flex flex-col w-full mx-auto justify-center items-center">
+            <MainBtn text={'Start Game'} onClick={() => route("/play")} />
+            <div
+              style={{ zIndex: 1 }}
+              className="mt-4 w-4/5 flex justify-between"
+            >
+              <SmallBtn text={'Telegram'} />
+              <SmallBtn text={'Website'} />
+              <SmallBtn text={'Discord'} />
+            </div>
           </div>
         </div>
-        <img src="bg-land.png" className="w-full absolute left-0 bottom-0" />
+        <img src="bg-land.png" className="w-full absolute left-0 bottom-0 z-10" />
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 import LaunchScreen from "./components/LaunchScreen";
 import GameplayScreen from "./components/GameplayScreen";
 
-// import LoadingScreen from "./components/LoadingScreen";
+import LoadingScreen from "./components/LoadingScreen";
 import Boosts from "./components/Boosts";
 // import FriendsInvite from "./components/FriendsInvite";
 import League from "./components/League";
@@ -14,6 +14,7 @@ export const routes = [
     { path: '/task', Component: Task, title: 'Task' },
     { path: '/boost', Component: Boosts, title: 'League' },
     { path: '/league', Component: League, title: 'League' },
+    { path: '/load', Component: LoadingScreen, title: 'League' },
     { path: '/refer', Component: Refer, title: 'Invite Friends' },
     { path: '/play', Component: GameplayScreen, title: 'Play Game' },
 ];

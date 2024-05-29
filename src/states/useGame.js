@@ -54,7 +54,7 @@ export default create(
           let newEnergy = energy - damage;
           let newLevel = currentLevel;
           if (newLevelDataPoints >= levelData.maxPoints) {
-            newLevelDataPoints = 0; 
+            newLevelDataPoints = 0;
             newLevel++;
 
             if (config.levels[newLevel - 1]) {
@@ -88,11 +88,23 @@ export default create(
         //ensure gameState.energy is less than gameState.energyCap
         //increament gameState.energy by rechargeSpeed
         // energy cannot be greater than energyCap
-        const { energy, energyCap, rechargeSpeed } = get();
+        const { energy, energyCap, rechargeSpeed, lastRecharged } = get();
+        const now = Date.now();
+        if (lastRecharged > -1) {
+          const elapsed = Math.floor((now - lastRecharged) / 1000);
 
-        if (energy < energyCap) {
-          const newEnergy = Math.min(energy + rechargeSpeed, energyCap);
-          set({ energy: newEnergy });
+          const additionalEnergy = elapsed * rechargeSpeed;
+          const newEnergy = Math.min(energy + additionalEnergy, energyCap);
+
+          set({
+            energy: newEnergy,
+            lastRecharged: now,
+          });
+        } else {
+          set({
+            energy: energyCap,
+            lastRecharged: now,
+          });
         }
       },
       upgradeRechargeSpeed: () => {
@@ -101,7 +113,7 @@ export default create(
         //deduct cost from point,
         //increment rechargeSpeed by 1
         const { points, rechargeSpeed } = get();
-        const cost = rechargeSpeed === 1 ? 100 : 1000 * Math.pow(2, rechargeSpeed-1);
+        const cost = rechargeSpeed === 1 ? 100 : 1000 * Math.pow(2, rechargeSpeed - 1);
 
         if (points >= cost) {
           set({
@@ -116,7 +128,7 @@ export default create(
         //deduct cost from point,
         //increment damage by 1
         const { points, damage } = get();
-        const cost = damage === 1 ? 100 : 1000 * Math.pow(2, damage-1);
+        const cost = damage === 1 ? 100 : 1000 * Math.pow(2, damage - 1);
 
         if (points >= cost) {
           set({
@@ -133,7 +145,7 @@ export default create(
         //increment energyCap by 500
         const { points, energyCap } = get();
         const energyCapLevel = energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1;
-        const cost = energyCapLevel === 1 ? 100 : 1000 * Math.pow(2, energyCapLevel-1);
+        const cost = energyCapLevel === 1 ? 100 : 1000 * Math.pow(2, energyCapLevel - 1);
 
         if (points >= cost) {
           set({
@@ -201,8 +213,8 @@ export default create(
         const { freeBoosts } = get();
         const now = Date.now();
 
-        if (now - freeBoosts.turboLastActivatedAt >= ONE_DAY_MS || 
-            now - freeBoosts.turboAmountLastRechargeDate >= ONE_DAY_MS) {
+        if (now - freeBoosts.turboLastActivatedAt >= ONE_DAY_MS ||
+          now - freeBoosts.turboAmountLastRechargeDate >= ONE_DAY_MS) {
           set(state => ({
             freeBoosts: {
               ...state.freeBoosts,
@@ -220,8 +232,8 @@ export default create(
         const { freeBoosts } = get();
         const now = Date.now();
 
-        if (now - freeBoosts.refillEnergyLastActivatedAt > ONE_DAY_MS || 
-            now - freeBoosts.refillEnergyAmountLastRechargeDate > ONE_DAY_MS) {
+        if (now - freeBoosts.refillEnergyLastActivatedAt > ONE_DAY_MS ||
+          now - freeBoosts.refillEnergyAmountLastRechargeDate > ONE_DAY_MS) {
           set(state => ({
             freeBoosts: {
               ...state.freeBoosts,

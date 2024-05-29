@@ -62,8 +62,8 @@ export default function Game() {
 
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
-        <div className="flex flex-col items-center">
+      <div className="h-screen  relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
+        <div className="fixed top-5 w-full mx-auto z-50 flex flex-col items-center">
           <div
             type="button"
             className="
@@ -91,7 +91,7 @@ export default function Game() {
             <span className="ml-2 text-white">$ {points}</span>
           </div>
         </div>
-        <div className="w-full flex justify-center">
+        <div className="fixed top-[100px] w-full mx-auto z-50 flex justify-center">
           <div className="grid grid-cols-3 mb-4 w-4/5 center gap-2">
             <button
               type="button"
@@ -152,17 +152,17 @@ export default function Game() {
             >
               <div className="flex justify-center items-center">
                 <img src="/cash.svg" height={16} width={16} />
-                <span className="text-xs ml-2 font-[Montserrat] text-left text-white">
+                <span className="text-xs ml-1 font-[Montserrat] text-left text-white">
                   <span className="font-[600] mr-1">Earn Gold</span>
                 </span>
               </div>
             </button>
           </div>
         </div>
-        <div className="flex justify-center my-4">
+        <div className="fixed top-[200px] w-full mx-auto z-50 flex justify-center ">
           <img onClick={handleTap} src="/robot.png" height="auto" width={'auto'} />
         </div>
-        <div className="flex justify-center">
+        <div className="flex z-50 bottom-28 w-full mx-auto fixed justify-center">
           <div
             className="
               w-5/6 
@@ -201,7 +201,7 @@ export default function Game() {
         {tapEffects.map((effect) => (
           <div
             key={effect.id}
-            className="absolute text-white font-bold text-xl animate-evaporate"
+            className="absolute text-white z-50 font-bold text-xl animate-evaporate"
             style={{ left: effect.x, top: effect.y }}
           >
             +{effect.damage}

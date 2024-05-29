@@ -1,5 +1,5 @@
 "use client";
-import { Button, Modal } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import useGame from "../states/useGame";
 
@@ -15,7 +15,7 @@ export default function BoostsComponent() {
   const [modalContent, setModalContent] = useState()
 
   const calculateCost = (baseCost, currentLevel) => {
-    return currentLevel === 1 ? baseCost : 1000 * Math.pow(2, currentLevel-1);
+    return currentLevel === 1 ? baseCost : 1000 * Math.pow(2, currentLevel - 1);
   };
 
   const boosts = [
@@ -62,7 +62,7 @@ export default function BoostsComponent() {
       title: "Turbo Mode",
       desc: "Multiply your income by x5 for 20 Seconds. Do not use energy while active",
       btnText: "Get for free!!!",
-      action: () =>{handleCloseModal(); claimTurbo()},
+      action: () => { handleCloseModal(); claimTurbo() },
       image: "/potion.svg"
     })
   }
@@ -72,7 +72,7 @@ export default function BoostsComponent() {
       title: "Recharge Power",
       desc: "Recharge your Power to the max",
       btnText: "Get for free!!!",
-      action: () => {handleCloseModal(); claimRefill()},
+      action: () => { handleCloseModal(); claimRefill() },
       image: "/energy.svg"
     })
   }
@@ -87,7 +87,7 @@ export default function BoostsComponent() {
       title: boost.name,
       desc: boost.desc,
       btnText: `Get for ${boost.price}`,
-      action: () =>{handleCloseModal(); boost.action()},
+      action: () => { handleCloseModal(); boost.action() },
       image: boost.image,
       price: Number(boost.price.slice(1))
     })
@@ -98,13 +98,12 @@ export default function BoostsComponent() {
   }, [modalContent])
 
   return (
-    <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
-        <div className="mt-4">
+    <section className="min-h-screen bg-[#A86A4B]">
+      <div className="h-screen relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
+        <div className="fixed top-5 w-full mx-auto z-50 flex flex-col items-center">
           <p className="text-xs text-center text-gray-400">Your Balance</p>
-        </div>
-        <div
-          className="
+          <div
+            className="
               font-medium 
               rounded-lg
               text-2xl
@@ -112,84 +111,87 @@ export default function BoostsComponent() {
               mb-4
               mt-2
               flex justify-center items-center"
-        >
-          <span className="ml-2 text-white text-4xl">$ {points}</span>
-        </div>
-        <div className="pl-10 text-xl text-white font-medium pt-4">
-          Free Boosts:
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="mt-2 w-4/5 flex justify-between">
-            <button
-              onClick={handleTurboBoost}
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-6
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-950
-              "
-            >
-              <div className="flex justify-center items-center">
-                <img src="/potion.svg" height={25} width={25} />
-                <div className="ml-2 flex flex-col text-white">
-                  <span className="text-base text-left">TURBO</span>
-                  <span className="text-base text-left text-[#F7BE38]">
-                    {freeBoosts.turboCount}/{freeBoosts.maxTurbo} Boosts
-                  </span>
-                </div>
-              </div>
-            </button>
-            <button
-              onClick={handleRefillBoost}
-              type="button"
-              className="
-              text-white 
-              bg-[#A86A4B]
-              stroke-[#FAB135]
-              hover:bg-[#F7BE38]/90 
-              focus:ring-4 
-              focus:outline-none 
-              focus:ring-[#F7BE38]/50 
-              font-medium rounded-lg
-              px-6
-              py-2
-              text-center 
-              dark:focus:ring-[#F7BE38]/50
-              drop-shadow-xl 
-              text-base
-              bordered-text-font
-              border-2
-              border-b-[6px] border-gray-950
-              "
-            >
-              <div className="flex justify-center items-center">
-                <img src="/energy.svg" height={25} width={25} />
-                <div className="ml-2 flex flex-col text-white">
-                  <span className="text-base text-left">RECHARGE</span>
-                  <span className="text-base text-left text-[#F7BE38]">
-                    {freeBoosts.refillEnergyAmount}/{freeBoosts.maxRefillEnergyAmount} Boosts
-                  </span>
-                </div>
-              </div>
-            </button>
+          >
+            <span className="ml-2 text-white text-4xl">$ {points}</span>
           </div>
         </div>
-        <div className="pl-10 text-xl text-white font-medium pt-4">Boosts:</div>
-        <div className="flex justify-center">
+        <div className="fixed top-24 w-full mx-auto z-50 flex flex-col">
+          <div className="pl-10 text-xl text-white font-medium">
+            Free Boosts:
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="mt-2 w-4/5 flex justify-between">
+              <button
+                onClick={handleTurboBoost}
+                type="button"
+                className="
+              text-white 
+              bg-[#A86A4B]
+              stroke-[#FAB135]
+              hover:bg-[#F7BE38]/90 
+              focus:ring-4 
+              focus:outline-none 
+              focus:ring-[#F7BE38]/50 
+              font-medium rounded-lg
+              px-6
+              py-2
+              text-center 
+              dark:focus:ring-[#F7BE38]/50
+              drop-shadow-xl 
+              text-base
+              bordered-text-font
+              border-2
+              border-b-[6px] border-gray-950
+              "
+              >
+                <div className="flex justify-center items-center">
+                  <img src="/potion.svg" height={25} width={25} />
+                  <div className="ml-2 flex flex-col text-white">
+                    <span className="text-base text-left">TURBO</span>
+                    <span className="text-base text-left text-[#F7BE38]">
+                      {freeBoosts.turboCount}/{freeBoosts.maxTurbo} Boosts
+                    </span>
+                  </div>
+                </div>
+              </button>
+              <button
+                onClick={handleRefillBoost}
+                type="button"
+                className="
+              text-white 
+              bg-[#A86A4B]
+              stroke-[#FAB135]
+              hover:bg-[#F7BE38]/90 
+              focus:ring-4 
+              focus:outline-none 
+              focus:ring-[#F7BE38]/50 
+              font-medium rounded-lg
+              px-6
+              py-2
+              text-center 
+              dark:focus:ring-[#F7BE38]/50
+              drop-shadow-xl 
+              text-base
+              bordered-text-font
+              border-2
+              border-b-[6px] border-gray-950
+              "
+              >
+                <div className="flex justify-center items-center">
+                  <img src="/energy.svg" height={25} width={25} />
+                  <div className="ml-2 flex flex-col text-white">
+                    <span className="text-base text-left">RECHARGE</span>
+                    <span className="text-base text-left text-[#F7BE38]">
+                      {freeBoosts.refillEnergyAmount}/{freeBoosts.maxRefillEnergyAmount} Boosts
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div className="pl-10 mt-2 text-xl text-white font-medium">Boosts:</div>
+        </div>
+        <div className="flex pt-64 justify-center">
           <div
             className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[314px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}
@@ -285,7 +287,7 @@ export default function BoostsComponent() {
                   px-10
               "
                 >
-                  {(modalContent?.price && points < modalContent.price) ? "Not Enoung Points": modalContent?.btnText}
+                  {(modalContent?.price && points < modalContent.price) ? "Not Enoung Points" : modalContent?.btnText}
                 </button>
               </div>
             </Modal.Body>

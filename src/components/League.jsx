@@ -3,8 +3,8 @@ import ButtomNav from "./Navbar/ButtomNav";
 
 const LeagueComponent = () => {
   return (
-    <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
+    <section className="min-h-screen bg-[#A86A4B]">
+      <div className="min-h-screen h-fit pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
         <div className="w-full flex justify-center mt-20">
           <div className="mb-4 w-3/5">
             <div className="flex justify-center items-center">

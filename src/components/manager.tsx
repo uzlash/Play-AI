@@ -27,7 +27,7 @@ export default function ManagerButton({ onClick, show }) {
         borderRadius: '50%',
         cursor: 'pointer',
       }}
-      className='rounded-full'
+      className='rounded-full z-50'
     >
       <img src="/manager-icon.png" alt="Start Manager" width={50} height={50} />
     </div>

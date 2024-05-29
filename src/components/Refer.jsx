@@ -5,18 +5,10 @@ import ButtomNav from "./Navbar/ButtomNav";
 import task from "../assets/task.svg";
 
 const ReferComponent = () => {
-  const boosts = [
-    { name: "Thank you", price: "+500 Ton", image: task },
-    { name: "Thank you", price: "+500 Ton", image: task },
-    { name: "Thank you", price: "+500 Ton", image: task },
-    { name: "Thank you", price: "+500 Ton", image: task },
-    { name: "Thank you", price: "+500 Ton", image: task },
-    { name: "Thank you", price: "+500 Ton", image: task },
-  ];
-
+  
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
+      <div className="min-h-screen h-fit pt-10 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
         <div
           className="
               font-medium 

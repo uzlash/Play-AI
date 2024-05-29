@@ -16,23 +16,23 @@ const TaskComponent = () => {
   return (
     <section className="h-screen bg-[#A86A4B]">
       <div className="h-screen pt-20 relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
-        <div
-          className="
+        <div className="fixed top-8 w-full mx-auto z-50 flex flex-col items-center">
+          <div
+            className="
               font-medium 
               rounded-lg
               text-2xl
               bordered-text-font
-              mt-4
               flex justify-center items-center"
-        >
-          <span className="ml-2 text-white text-4xl">Task Available</span>
-        </div>
-        <div className="mt-2 mb-4 flex justify-center">
-          <p className="text-xs text-center text-gray-300 w-40">
-            We’ll reward you with tons upon task completion
-          </p>
-        </div>
-        <div className="flex justify-center">
+          >
+            <span className="ml-2 text-white text-4xl">Task Available</span>
+          </div>
+          <div className="mt-2 mb-4 flex justify-center">
+            <p className="text-xs text-center text-gray-300 w-40">
+              We’ll reward you with tons upon task completion
+            </p>
+          </div></div>
+        <div className="pt-16 flex justify-center">
           <div
             className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[400px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}
