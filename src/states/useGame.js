@@ -6,14 +6,16 @@ const gameStat = {
   points: 0,
   currentLevel: 1,
   levelData: {
-    level: 1,
-    name: "name",
-    points: 0,
-    maxPoints: 5000,
+      level: 1,
+      maxPoints: 5000,
+      points: 0,
+      name: 'Normies',
+      bonus: 10000
   },
   manager: {
     level: 0,
-    timeTriggered: -1
+    timeTriggered: 0,
+    managerRestAt: 0,
   },
   damage: 1,
   energy: 1000,
@@ -22,16 +24,17 @@ const gameStat = {
   freeBoosts: {
     turboCount: 3,
     maxTurbo: 3,
-    turboLastActivatedAt: -1,
-    turboAmountLastRechargeDate: -1,
+    turboLastActivatedAt: 0,
+    turboAmountLastRechargeDate: 0,
     refillEnergyAmount: 3,
     maxRefillEnergyAmount: 3,
-    refillEnergyLastActivatedAt: -1,
-    refillEnergyAmountLastRechargeDate: -1
+    refillEnergyLastActivatedAt: 0,
+    refillEnergyAmountLastRechargeDate: 0
   },
+  managerActive: false,
   turboActive: false,
-  turboDamageEndAt: -1,
-  turboDamageStartAt: -1,
+  turboDamageEndAt: 0,
+  turboDamageStartAt: 0,
   turboDamageMultiplier: 10,
 };
 
@@ -60,14 +63,15 @@ export default create(
             if (config.levels[newLevel - 1]) {
               const nextLevelConfig = config.levels[newLevel - 1];
               set(state => ({
-                points: newPoints + nextLevelConfig.bonus,
+                points: newPoints + levelData.bonus,
                 currentLevel: newLevel,
                 levelData: {
                   ...state.levelData,
                   level: nextLevelConfig.level,
                   name: nextLevelConfig.name,
                   points: newLevelDataPoints,
-                  maxPoints: nextLevelConfig.maxPoints
+                  maxPoints: nextLevelConfig.maxPoints,
+                  bonus: nextLevelConfig.bonus
                 }
               }));
             }
@@ -81,8 +85,9 @@ export default create(
               }
             });
           }
+          return true
         }
-
+        return false
       },
       recharge: () => {
         //ensure gameState.energy is less than gameState.energyCap
@@ -91,7 +96,7 @@ export default create(
         const { energy, energyCap, rechargeSpeed, lastRecharged } = get();
         const now = Date.now();
         if (lastRecharged > -1) {
-          const elapsed = Math.floor((now - lastRecharged) / 1000);
+          const elapsed = Math.floor((now - lastRecharged) / 999);
 
           const additionalEnergy = elapsed * rechargeSpeed;
           const newEnergy = Math.min(energy + additionalEnergy, energyCap);
@@ -164,7 +169,7 @@ export default create(
 
         if (points >= cost) {
           set({
-            points: points - cost,
+            points: (points - cost),
             manager: {
               ...manager,
               level: manager.level + 1
@@ -245,20 +250,185 @@ export default create(
 
       },
       startManager: () => {
-        const { manager } = get();
+        const { manager, managerActive } = get();
         const now = Date.now();
         const autoTapDuration = manager.level * 60 * 1000;
 
-        if (now - manager.timeTriggered >= autoTapDuration) {
-          set(state => ({
+        if (!managerActive) {
+          set((state) => ({
+            managerActive: true,
             manager: {
               ...state.manager,
               timeTriggered: now,
-            }
+              managerRestAt: now + autoTapDuration,
+            },
           }));
         }
       },
+      managerTap: () => {
+        const { manager, managerActive, energy, energyCap, levelData, currentLevel, damage, points, rechargeSpeed } = get();
+        const now = Date.now();
 
+        if (managerActive) {
+          if (now >= manager.managerRestAt) {
+            if (energy === energyCap) {
+              const elapsed = Math.max(0, manager.managerRestAt - manager.timeTriggered);
+              const posiblePoints = damage * Math.floor(elapsed / 1000);
+              const totalRechargeableEnergy = energy + rechargeSpeed * Math.floor(elapsed / 1000);
+              const totalPoints = Math.min(totalRechargeableEnergy, posiblePoints);
+
+              console.log({ totalPoints, totalRechargeableEnergy, posiblePoints, elapsed })
+              let newPoints = points + totalPoints;
+              let newLevelDataPoints = levelData.points + totalPoints;
+              let newEnergy = Math.min(energyCap, Math.max(0, totalRechargeableEnergy - totalPoints));
+              let newLevel = currentLevel;
+
+              if (newLevelDataPoints >= levelData.maxPoints) {
+                newLevelDataPoints = 0;
+                newLevel++;
+
+                if (config.levels[newLevel - 1]) {
+                  const nextLevelConfig = config.levels[newLevel - 1];
+                  set(state => ({
+                    points: newPoints + levelData.bonus,
+                    currentLevel: newLevel,
+                    managerActive: false,
+                    levelData: {
+                      ...state.levelData,
+                      level: nextLevelConfig.level,
+                      name: nextLevelConfig.name,
+                      points: newLevelDataPoints,
+                      maxPoints: nextLevelConfig.maxPoints,
+                      bonus: nextLevelConfig.bonus
+                    },
+                    manager: {
+                      ...state.manager,
+                      managerRestAt: 0,
+                      timeTriggered: 0,
+                    },
+                  }));
+                }
+              } else {
+                set({
+                  energy: newEnergy,
+                  points: newPoints,
+                  managerActive: false,
+                  levelData: {
+                    ...levelData,
+                    points: newLevelDataPoints
+                  },
+                  manager: {
+                    ...manager,
+                    managerRestAt: 0,
+                    timeTriggered: 0,
+                  }
+                });
+              }
+            }
+          } else {
+            const elapsed = now - manager.timeTriggered;
+            const totalPoints = damage * Math.floor(elapsed / 999);
+            const totalRechargeableEnergy = energy + rechargeSpeed * Math.floor(elapsed / 1000);
+            const minEnergyPoints = Math.min(totalRechargeableEnergy, totalPoints);
+            console.log({ minEnergyPoints, totalRechargeableEnergy, totalPoints, elapsed })
+
+            if (energy >= totalPoints) {
+              // Sufficient energy, simple subtraction
+              let newPoints = points + totalPoints;
+              let newLevelDataPoints = levelData.points + totalPoints;
+              let newEnergy = energy - totalPoints;
+              let newLevel = currentLevel;
+
+              if (newLevelDataPoints >= levelData.maxPoints) {
+                newLevelDataPoints = 0;
+                newLevel++;
+
+                if (config.levels[newLevel - 1]) {
+                  const nextLevelConfig = config.levels[newLevel - 1];
+                  set(state => ({
+                    energy: newEnergy,
+                    points: newPoints + levelData.bonus,
+                    currentLevel: newLevel,
+                    levelData: {
+                      ...state.levelData,
+                      level: nextLevelConfig.level,
+                      name: nextLevelConfig.name,
+                      points: newLevelDataPoints,
+                      maxPoints: nextLevelConfig.maxPoints,
+                      bonus: nextLevelConfig.bonus
+                    },
+                    manager: {
+                      ...state.manager,
+                      timeTriggered: now,
+                    },
+                  }));
+                }
+              } else {
+                set({
+                  energy: newEnergy,
+                  points: newPoints,
+                  levelData: {
+                    ...levelData,
+                    points: newLevelDataPoints
+                  },
+                  manager: {
+                    ...manager,
+                    timeTriggered: now,
+                  }
+                });
+              }
+            } else {
+              if (energy === energyCap) {
+                // Insufficient energy, use up all energy and recharge if possible
+                let newEnergy = Math.min(energyCap, Math.max(0, totalRechargeableEnergy - totalPoints));
+                let newPoints = points + minEnergyPoints;
+                let newLevelDataPoints = levelData.points + minEnergyPoints;
+                let newLevel = currentLevel;
+
+                // console.log({minEnergyPoints, totalRechargeableEnergy, totalPoints, elapsed})
+                if (newLevelDataPoints >= levelData.maxPoints) {
+                  newLevelDataPoints = 0;
+                  newLevel++;
+
+                  if (config.levels[newLevel - 1]) {
+                    const nextLevelConfig = config.levels[newLevel - 1];
+                    set(state => ({
+                      points: newPoints + levelData.bonus,
+                      currentLevel: newLevel,
+                      levelData: {
+                        ...state.levelData,
+                        level: nextLevelConfig.level,
+                        name: nextLevelConfig.name,
+                        points: newLevelDataPoints,
+                        maxPoints: nextLevelConfig.maxPoints,
+                        bonus: nextLevelConfig.bonus
+                      },
+                      energy: newEnergy,
+                      manager: {
+                        ...state.manager,
+                        timeTriggered: now,
+                      },
+                    }));
+                  }
+                } else {
+                  set({
+                    energy: newEnergy,
+                    points: newPoints,
+                    levelData: {
+                      ...levelData,
+                      points: newLevelDataPoints
+                    },
+                    manager: {
+                      ...manager,
+                      timeTriggered: now,
+                    }
+                  });
+                }
+              }
+            }
+          }
+        }
+      },
     }),
     {
       name: "play-ai-game-record",
@@ -272,79 +442,80 @@ const config = {
     {
       level: 1,
       maxPoints: 5000,
-      name: ' ',
+      name: 'Normies',
       desc: ' ',
       bonus: 10000
     },
     {
       level: 2,
       maxPoints: 200000,
-      name: ' ',
+      name: 'Cadet',
       desc: ' ',
       bonus: 50000
     },
     {
-      level: 1,
+      level: 3,
       maxPoints: 2000000,
-      name: ' ',
+      name: 'Officer',
       desc: ' ',
       bonus: 100000
     },
     {
-      level: 1,
+      level: 4,
       maxPoints: 3000000,
-      name: ' ',
+      name: 'Lieutenant',
       desc: ' ',
       bonus: 500000
     },
     {
-      level: 1,
+      level: 5,
       maxPoints: 4000000,
-      name: ' ',
+      name: 'Captain',
       desc: ' ',
       bonus: 1000000
     },
     {
-      level: 1,
+      level: 6,
       maxPoints: 6000000,
-      name: ' ',
+      name: 'Major',
       desc: ' ',
       bonus: 1500000
     },
     {
-      level: 1,
+      level: 7,
       maxPoints: 8000000,
-      name: ' ',
+      name: 'Colonel',
       desc: ' ',
       bonus: 2000000
     },
     {
-      level: 1,
+      level: 8,
       maxPoints: 10000000,
-      name: ' ',
+      name: 'Brigadier',
       desc: ' ',
       bonus: 3000000
     },
     {
-      level: 1,
+      level: 9,
       maxPoints: 13000000,
-      name: ' ',
+      name: 'General',
       desc: ' ',
       bonus: 4500000
     },
     {
-      level: 1,
+      level: 10,
       maxPoints: 16000000,
-      name: ' ',
+      name: 'Field Marshal',
       desc: ' ',
       bonus: 6000000
     },
     {
-      level: 1,
+      level: 11,
       maxPoints: 20000000,
-      name: ' ',
+      name: 'CHAD',
       desc: ' ',
       bonus: 8000000
     }
-  ],
+  ]
+
 }

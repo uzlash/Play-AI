@@ -8,7 +8,7 @@ export default function ButtomNav() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center">
+    <div className="fixed max-w-md mx-auto w-[90%] bottom-0 left-0 right-0 z-50 flex justify-center">
       <div
         style={{ zIndex: 1 }}
         className="

@@ -20,7 +20,7 @@ export default function LaunchScreen() {
             Are you ready to make a difference while having fun? Start tapping
             and training our AI bot today!
           </p>
-          <div className="z-50 fixed bottom-10 flex flex-col w-full mx-auto justify-center items-center">
+          <div className="z-50 max-w-md  w-[90%] fixed bottom-10 flex flex-col mx-auto justify-center items-center">
             <MainBtn text={'Start Game'} onClick={() => route("/play")} />
             <div
               style={{ zIndex: 1 }}

@@ -50,7 +50,7 @@ export default function BoostsComponent() {
       name: "Hire Miner",
       price: `$${manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1)}`,
       level: `LVL ${manager.level + 1}`,
-      desc: `Miner would mine on your behalf for ${manager.level + 1}mins every trigger.`,
+      desc: `Miner would mine on your behalf when there is energy for ${manager.level + 1}mins every trigger.`,
       image: roboto,
       action: () => upgradeManager(),
       ref: "manager"
@@ -99,8 +99,8 @@ export default function BoostsComponent() {
 
   return (
     <section className="min-h-screen bg-[#A86A4B]">
-      <div className="h-screen relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
-        <div className="fixed top-5 w-full mx-auto z-50 flex flex-col items-center">
+      <div className="h-screen relative mx-auto flex justify-center max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-[#0B080880] bg-blend-multiply">
+        <div className="fixed top-5 w-[90%] max-w-md mx-auto z-50 flex flex-col items-center">
           <p className="text-xs text-center text-gray-400">Your Balance</p>
           <div
             className="
@@ -115,7 +115,7 @@ export default function BoostsComponent() {
             <span className="ml-2 text-white text-4xl">$ {points}</span>
           </div>
         </div>
-        <div className="fixed top-24 w-full mx-auto z-50 flex flex-col">
+        <div className="fixed top-24 w-[90%] max-w-md mx-auto z-50 flex flex-col">
           <div className="pl-10 text-xl text-white font-medium">
             Free Boosts:
           </div>
@@ -191,7 +191,7 @@ export default function BoostsComponent() {
           </div>
           <div className="pl-10 mt-2 text-xl text-white font-medium">Boosts:</div>
         </div>
-        <div className="flex pt-64 justify-center">
+        <div className="flex pt-64 w-full justify-center">
           <div
             className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[314px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}

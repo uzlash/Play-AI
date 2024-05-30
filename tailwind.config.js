@@ -20,7 +20,7 @@ export default {
       keyframes: {
         evaporate: {
           '0%': { opacity: '1', transform: 'translateY(0)' },
-          '100%': { opacity: '0', transform: 'translateY(-220px)' },
+          '100%': { opacity: '0', transform: 'translateY(-300px)' },
         },
         marquee: {
           "0%": { transform: "translateX(0%)" },

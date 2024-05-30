@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function ManagerButton({ onClick, show }) {
+export default function ManagerButton({ onTouchStart, show }) {
   const [position, setPosition] = useState({ top: '50%', left: '50%' });
 
   useEffect(() => {
@@ -15,21 +15,19 @@ export default function ManagerButton({ onClick, show }) {
 
   return (
     <div
-      onClick={onClick}
+      onClick={onTouchStart}
       style={{
         position: 'absolute',
         top: position.top,
         left: position.left,
         transform: 'translate(-50%, -50%)',
         zIndex: 1000,
-        background: '#F7BE38',
         padding: '10px',
         borderRadius: '50%',
-        cursor: 'pointer',
       }}
-      className='rounded-full z-50'
+      className='rounded-full z-50 '
     >
-      <img src="/manager-icon.png" alt="Start Manager" width={50} height={50} />
+      <img onTouchStart={onTouchStart} src="/manager.svg" alt="Start Manager" width={50} height={50} />
     </div>
   );
 }

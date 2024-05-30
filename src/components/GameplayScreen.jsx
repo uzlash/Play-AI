@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import ButtomNav from "./Navbar/ButtomNav";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -6,9 +7,10 @@ import ManagerButton from "./manager";
 
 export default function Game() {
   const route = useNavigate()
-  const { points, damage, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap } = useGame();
+  const { points, damage, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap } = useGame();
   const [showManagerButton, setShowManagerButton] = useState(false);
   const [tapEffects, setTapEffects] = useState([]);
+  const [playAnime, setPlayAnime] = useState(false);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -17,19 +19,48 @@ export default function Game() {
       rechargeTurbo();
       rechargeRefill()
 
-      const now = Date.now();
-      if (manager.level > 0 && (now - manager.timeTriggered) > 60000) {
+      if (!managerActive && manager.level > 0) {
         setShowManagerButton(true);
       } else {
         setShowManagerButton(false);
       }
-    }, 1000);
+    }, 999);
 
     return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleTap(e) {
+    if (energy > damage) {
+      const touches = e.touches;
+      const newTapEffects = [];
+
+      for (let i = 0; i < touches.length; i++) {
+        const touch = touches[i];
+        const x = touch.clientX;
+        const y = touch.clientY;
+        const newTapEffect = {
+          id: Date.now() + i,
+          x,
+          y,
+          damage
+        };
+        newTapEffects.push(newTapEffect);
+        //if turboActive turboTap
+        tap();
+      }
+      setTapEffects([...tapEffects, ...newTapEffects]);
+
+      setTimeout(() => {
+        setTapEffects((effects) => effects.filter((effect) => !newTapEffects.includes(effect)));
+      }, 1000);
+
+      setPlayAnime(true);
+      setTimeout(() => setPlayAnime(false), 2000);
+    }
+  }
+
+  function handleClick(e) {
     const x = e.clientX;
     const y = e.clientY;
     const newTapEffect = {
@@ -47,23 +78,32 @@ export default function Game() {
     }, 1000);
   }
 
+  function handleActivateManger() {
+    setShowManagerButton(false);
+    console.log(managerActive)
+    startManager()
+  }
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const now = Date.now();
-      const autoTapDuration = manager.level * 60 * 1000;
+    let intervalId;
 
-      if (manager.timeTriggered > now && (now - manager.timeTriggered) < autoTapDuration) {
-        tap();
+    if (managerActive) {
+      intervalId = setInterval(() => {
+        managerTap();
+      }, 1001);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
       }
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [manager, tap]);
+    };
+  }, [managerActive, managerTap]);
 
   return (
     <section className="h-screen bg-[#A86A4B]">
-      <div className="h-screen  relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
-        <div className="fixed top-5 w-full mx-auto z-50 flex flex-col items-center">
+      <div className="h-screen justify-center flex relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-600 bg-blend-multiply">
+        <div className="fixed top-5 max-w-md w-[90%]  mx-auto z-50 flex flex-col items-center">
           <div
             type="button"
             className="
@@ -91,7 +131,7 @@ export default function Game() {
             <span className="ml-2 text-white">$ {points}</span>
           </div>
         </div>
-        <div className="fixed top-[100px] w-full mx-auto z-50 flex justify-center">
+        <div className="fixed top-[100px]  max-w-md  w-[90%]  mx-auto z-50 flex justify-center">
           <div className="grid grid-cols-3 mb-4 w-4/5 center gap-2">
             <button
               type="button"
@@ -159,10 +199,10 @@ export default function Game() {
             </button>
           </div>
         </div>
-        <div className="fixed top-[200px] w-full mx-auto z-50 flex justify-center ">
-          <img onClick={handleTap} src="/robot.png" height="auto" width={'auto'} />
+        <div className="fixed top-[200px] max-w-md w-[90%] items-center mx-auto z-50 flex justify-center ">
+          <img onTouchStart={handleTap} onClick={handleClick} className="self-center" src="/robot.png" height="auto" width={'auto'} />
         </div>
-        <div className="flex z-50 bottom-28 w-full mx-auto fixed justify-center">
+        <div className="flex z-50 bottom-28 max-w-md  w-[90%] mx-auto fixed justify-center">
           <div
             className="
               w-5/6 
@@ -197,11 +237,11 @@ export default function Game() {
           </div>
         </div>
         <ButtomNav />
-        {showManagerButton && <ManagerButton show={showManagerButton} onClick={startManager} />}
+        {showManagerButton && <ManagerButton show={showManagerButton} onTouchStart={handleActivateManger} />}
         {tapEffects.map((effect) => (
           <div
             key={effect.id}
-            className="absolute text-white z-50 font-bold text-xl animate-evaporate"
+            className="absolute text-white z-50 font-bold text-3xl animate-evaporate"
             style={{ left: effect.x, top: effect.y }}
           >
             +{effect.damage}
