@@ -4,31 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useGame from "../states/useGame";
 import ManagerButton from "./manager";
+import TurboButton from "./Turbo";
 
 export default function Game() {
   const route = useNavigate()
-  const { points, damage, levelData, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap } = useGame();
+  const { points, damage, levelData, freeBoosts, activateTurbo, turboTap, turboDamageMultiplier, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap } = useGame();
   const [showManagerButton, setShowManagerButton] = useState(false);
   const [tapEffects, setTapEffects] = useState([]);
   const [playAnime, setPlayAnime] = useState(false);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      //TODO: handle in a global position.
-      recharge();
-      rechargeTurbo();
-      rechargeRefill()
-
-      if (!managerActive && manager.level > 0) {
-        setShowManagerButton(true);
-      } else {
-        setShowManagerButton(false);
-      }
-    }, 999);
-
-    return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   function handleTap(e) {
     if (energy > damage) {
@@ -43,11 +27,10 @@ export default function Game() {
           id: Date.now() + i,
           x,
           y,
-          damage
+          damage: turboActive ? (damage * turboDamageMultiplier) : damage
         };
         newTapEffects.push(newTapEffect);
-        //if turboActive turboTap
-        tap();
+        turboActive ? turboTap() : tap()
       }
       setTapEffects([...tapEffects, ...newTapEffects]);
 
@@ -67,10 +50,10 @@ export default function Game() {
       id: Date.now(),
       x,
       y,
-      damage
+      damage: turboActive ? (damage * turboDamageMultiplier) : damage
     };
 
-    tap()
+    turboActive ? turboTap() : tap()
     setTapEffects([...tapEffects, newTapEffect]);
 
     setTimeout(() => {
@@ -84,21 +67,25 @@ export default function Game() {
     startManager()
   }
 
+  function handleActivateTurbo() {
+    console.log(freeBoosts.turboActivePurchase)
+    activateTurbo()
+  }
+
   useEffect(() => {
-    let intervalId;
-
-    if (managerActive) {
-      intervalId = setInterval(() => {
-        managerTap();
-      }, 1001);
-    }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+    const intervalId = setInterval(() => {
+      if (managerActive) {
+        setShowManagerButton(false);
+      } else {
+        if (manager.level > 0) {
+          setShowManagerButton(true);
+        }
       }
-    };
-  }, [managerActive, managerTap]);
+    }, 999);
+
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <section className="h-screen bg-[#A86A4B]">
@@ -107,7 +94,7 @@ export default function Game() {
           <div
             type="button"
             className="
-              w-4/5
+              w-full
               bg-gray-950 
               stroke-[#a86a4b]
               focus:ring-4 
@@ -132,7 +119,7 @@ export default function Game() {
           </div>
         </div>
         <div className="fixed top-[100px]  max-w-md  w-[90%]  mx-auto z-50 flex justify-center">
-          <div className="grid grid-cols-3 mb-4 w-4/5 center gap-2">
+          <div className="grid grid-cols-3 mb-4 w-full center gap-2">
             <button
               type="button"
               className="
@@ -205,7 +192,7 @@ export default function Game() {
         <div className="flex z-50 bottom-28 max-w-md  w-[90%] mx-auto fixed justify-center">
           <div
             className="
-              w-5/6 
+              w-full
               bg-gray-950 
               stroke-[#a86a4b]
               focus:ring-4 
@@ -238,6 +225,7 @@ export default function Game() {
         </div>
         <ButtomNav />
         {showManagerButton && <ManagerButton show={showManagerButton} onTouchStart={handleActivateManger} />}
+        {freeBoosts.turboActivePurchase && <TurboButton show={freeBoosts.turboActivePurchase} onTouchStart={handleActivateTurbo} />}
         {tapEffects.map((effect) => (
           <div
             key={effect.id}

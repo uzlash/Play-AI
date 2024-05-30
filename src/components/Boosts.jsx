@@ -48,7 +48,8 @@ export default function BoostsComponent() {
     },
     {
       name: "Hire Miner",
-      price: `$${manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1)}`,
+      price: `$${manager.level === 0 ? 1000 : 2000 * Math.pow(2, manager.level + 1)}`,
+      // price: `$${manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1)}`,
       level: `LVL ${manager.level + 1}`,
       desc: `Miner would mine on your behalf when there is energy for ${manager.level + 1}mins every trigger.`,
       image: roboto,
@@ -61,9 +62,10 @@ export default function BoostsComponent() {
     setModalContent({
       title: "Turbo Mode",
       desc: "Multiply your income by x5 for 20 Seconds. Do not use energy while active",
-      btnText: "Get for free!!!",
+      btnText: freeBoosts.turboCount === 0 ? "Try Again Tomorrow" : "Get for free!!!",
       action: () => { handleCloseModal(); claimTurbo() },
-      image: "/potion.svg"
+      image: "/potion.svg",
+      disabled: freeBoosts.turboCount === 0
     })
   }
 
@@ -71,9 +73,10 @@ export default function BoostsComponent() {
     setModalContent({
       title: "Recharge Power",
       desc: "Recharge your Power to the max",
-      btnText: "Get for free!!!",
+      btnText: freeBoosts.refillEnergyAmount === 0 ? "Try Again Tomorrow" : "Get for free!!!",
       action: () => { handleCloseModal(); claimRefill() },
-      image: "/energy.svg"
+      image: "/energy.svg",
+      disabled: freeBoosts.refillEnergyAmount === 0
     })
   }
 
@@ -116,11 +119,11 @@ export default function BoostsComponent() {
           </div>
         </div>
         <div className="fixed top-24 w-[90%] max-w-md mx-auto z-50 flex flex-col">
-          <div className="pl-10 text-xl text-white font-medium">
+          <div className=" text-xl text-white font-medium">
             Free Boosts:
           </div>
           <div className="flex flex-col items-center">
-            <div className="mt-2 w-4/5 flex justify-between">
+            <div className="mt-2 w-full flex justify-between">
               <button
                 onClick={handleTurboBoost}
                 type="button"
@@ -189,7 +192,7 @@ export default function BoostsComponent() {
               </button>
             </div>
           </div>
-          <div className="pl-10 mt-2 text-xl text-white font-medium">Boosts:</div>
+          <div className="mt-2 text-xl text-white font-medium">Boosts:</div>
         </div>
         <div className="flex pt-64 w-full justify-center">
           <div
@@ -265,7 +268,7 @@ export default function BoostsComponent() {
               </div>
               <div className="flex justify-center my-4">
                 <button
-                  disabled={modalContent?.price && points < modalContent.price}
+                  disabled={(modalContent?.price && points < modalContent.price) || modalContent?.disabled}
                   onClick={modalContent?.action}
                   type="button"
                   className=" disabled:bg-transparent

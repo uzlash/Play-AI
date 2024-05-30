@@ -6,11 +6,11 @@ const gameStat = {
   points: 0,
   currentLevel: 1,
   levelData: {
-      level: 1,
-      maxPoints: 5000,
-      points: 0,
-      name: 'Normies',
-      bonus: 10000
+    level: 1,
+    maxPoints: 5000,
+    points: 0,
+    name: 'Normies',
+    bonus: 10000
   },
   manager: {
     level: 0,
@@ -24,6 +24,7 @@ const gameStat = {
   freeBoosts: {
     turboCount: 3,
     maxTurbo: 3,
+    turboActivePurchase: false,
     turboLastActivatedAt: 0,
     turboAmountLastRechargeDate: 0,
     refillEnergyAmount: 3,
@@ -34,7 +35,6 @@ const gameStat = {
   managerActive: false,
   turboActive: false,
   turboDamageEndAt: 0,
-  turboDamageStartAt: 0,
   turboDamageMultiplier: 10,
 };
 
@@ -88,6 +88,48 @@ export default create(
           return true
         }
         return false
+      },
+      turboTap: () => {
+        const { turboActive, turboDamageEndAt, turboDamageMultiplier, damage, points, levelData, currentLevel } = get();
+
+        if (turboActive) {
+          const now = Date.now();
+          if (turboDamageEndAt >= now) {
+            let newPoints = points + (damage * turboDamageMultiplier);
+            let newLevelDataPoints = levelData.points + (damage * turboDamageMultiplier);
+            let newLevel = currentLevel;
+            if (newLevelDataPoints >= levelData.maxPoints) {
+              newLevelDataPoints = 0;
+              newLevel++;
+
+              if (config.levels[newLevel - 1]) {
+                const nextLevelConfig = config.levels[newLevel - 1];
+                set(state => ({
+                  points: newPoints + levelData.bonus,
+                  currentLevel: newLevel,
+                  levelData: {
+                    ...state.levelData,
+                    level: nextLevelConfig.level,
+                    name: nextLevelConfig.name,
+                    points: newLevelDataPoints,
+                    maxPoints: nextLevelConfig.maxPoints,
+                    bonus: nextLevelConfig.bonus
+                  }
+                }));
+              }
+            } else {
+              set({
+                points: newPoints,
+                levelData: {
+                  ...levelData,
+                  points: newLevelDataPoints
+                }
+              });
+            }
+          } else {
+            set({ turboActive: false, turboDamageEndAt: 0 })
+          }
+        }
       },
       recharge: () => {
         //ensure gameState.energy is less than gameState.energyCap
@@ -165,7 +207,8 @@ export default create(
         //deduct cost from point,
         //increment manager.level by 1
         const { points, manager } = get();
-        const cost = manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1);
+        const cost = manager.level === 0 ? 1000 : 2000 * Math.pow(2, manager.level + 1);
+        // const cost = manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1);
 
         if (points >= cost) {
           set({
@@ -206,6 +249,7 @@ export default create(
             freeBoosts: {
               ...state.freeBoosts,
               turboCount: state.freeBoosts.turboCount - 1,
+              turboActivePurchase: true,
               turboLastActivatedAt: Date.now(),
             }
           }));
@@ -265,19 +309,33 @@ export default create(
           }));
         }
       },
+      activateTurbo: () => {
+        const { turboActive, freeBoosts } = get();
+        const now = Date.now();
+
+        if (!turboActive && freeBoosts.turboActivePurchase) {
+          set((state) => ({
+            turboActive: true,
+            turboDamageEndAt: now + (20 * 1000),
+            freeBoosts: {
+              ...state.freeBoosts,
+              turboActivePurchase: false,
+            },
+          }));
+        }
+      },
       managerTap: () => {
         const { manager, managerActive, energy, energyCap, levelData, currentLevel, damage, points, rechargeSpeed } = get();
         const now = Date.now();
 
         if (managerActive) {
           if (now >= manager.managerRestAt) {
-            if (energy === energyCap) {
-              const elapsed = Math.max(0, manager.managerRestAt - manager.timeTriggered);
-              const posiblePoints = damage * Math.floor(elapsed / 1000);
-              const totalRechargeableEnergy = energy + rechargeSpeed * Math.floor(elapsed / 1000);
-              const totalPoints = Math.min(totalRechargeableEnergy, posiblePoints);
+            const elapsed = Math.max(0, manager.managerRestAt - manager.timeTriggered);
+            const posiblePoints = damage * Math.floor(elapsed / 1000);
+            const totalRechargeableEnergy = energy + rechargeSpeed * Math.floor(elapsed / 1000);
+            const totalPoints = Math.min(totalRechargeableEnergy, posiblePoints);
 
-              console.log({ totalPoints, totalRechargeableEnergy, posiblePoints, elapsed })
+            if (totalRechargeableEnergy >= totalPoints || energy === energyCap) {
               let newPoints = points + totalPoints;
               let newLevelDataPoints = levelData.points + totalPoints;
               let newEnergy = Math.min(energyCap, Math.max(0, totalRechargeableEnergy - totalPoints));
@@ -330,7 +388,6 @@ export default create(
             const totalPoints = damage * Math.floor(elapsed / 999);
             const totalRechargeableEnergy = energy + rechargeSpeed * Math.floor(elapsed / 1000);
             const minEnergyPoints = Math.min(totalRechargeableEnergy, totalPoints);
-            console.log({ minEnergyPoints, totalRechargeableEnergy, totalPoints, elapsed })
 
             if (energy >= totalPoints) {
               // Sufficient energy, simple subtraction
@@ -385,7 +442,6 @@ export default create(
                 let newLevelDataPoints = levelData.points + minEnergyPoints;
                 let newLevel = currentLevel;
 
-                // console.log({minEnergyPoints, totalRechargeableEnergy, totalPoints, elapsed})
                 if (newLevelDataPoints >= levelData.maxPoints) {
                   newLevelDataPoints = 0;
                   newLevel++;

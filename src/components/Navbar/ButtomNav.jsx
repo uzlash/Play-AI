@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useNavigate, useLocation  } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ButtomNav() {
   const route = useNavigate()
@@ -12,20 +12,19 @@ export default function ButtomNav() {
       <div
         style={{ zIndex: 1 }}
         className="
-            w-5/6 
+            w-full
             bg-gray-950
             stroke-[#a86a4b]
             font-medium 
             rounded-lg
             text-center 
             drop-shadow-xl
-            text-2xl
             bordered-text-font
             border-2
             border-b-4 
             border-[#a86a4b]
             flex 
-            justify-around 
+            justify-between 
             items-center
             mt-4
             py-2
@@ -56,7 +55,7 @@ export default function ButtomNav() {
 function MiniBtn({ children, onClick, active }) {
   return (
     <button
-    onClick={onClick}
+      onClick={onClick}
       className={`
       flex 
       flex-col 
