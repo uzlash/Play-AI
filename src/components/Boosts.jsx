@@ -1,8 +1,8 @@
 "use client";
 import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import useGame, { parsePoints } from "../states/useGame";
-
+import useGame from "../states/useGame";
+import { parsePoints, formatNumberWithCommas } from "../utils";
 import ButtomNav from "./Navbar/ButtomNav";
 import sword from "../assets/sword.svg";
 import energy from "../assets/energy.svg";
@@ -21,7 +21,7 @@ export default function BoostsComponent() {
   const boosts = [
     {
       name: "Multi Slash",
-      price: `$ ${calculateCost(100, damage)}`,
+      price: `$ ${parsePoints(calculateCost(100, damage)).value} ${parsePoints(calculateCost(100, damage)).units ? ' ' + parsePoints(calculateCost(100, damage)).units : ''}`,
       level: `LVL ${damage}`,
       desc: `Increase your miners point to ${damage + 1} per mine`,
       image: sword,
@@ -30,7 +30,7 @@ export default function BoostsComponent() {
     },
     {
       name: "Power Threshold",
-      price: `$ ${calculateCost(100, energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1)}`,
+      price: `$ ${parsePoints(calculateCost(100, energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1)).value} ${parsePoints(calculateCost(100, energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1)).units ? ' ' + parsePoints(calculateCost(100, energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1)).units : ''}`,
       level: `LVL ${energyCap === 1000 ? 1 : ((energyCap - 1000) / 500) + 1}`,
       desc: `Increase your power threshold to ${energyCap + 500}`,
       image: potion,
@@ -39,7 +39,7 @@ export default function BoostsComponent() {
     },
     {
       name: "Recharge Speed",
-      price: `$ ${calculateCost(100, rechargeSpeed)}`,
+      price: `$ ${parsePoints(calculateCost(100, rechargeSpeed)).value} ${parsePoints(calculateCost(100, rechargeSpeed)).units ? ' ' + parsePoints(calculateCost(100, rechargeSpeed)).units : ''}`,
       level: `LVL ${rechargeSpeed}`,
       desc: `Increase Recharging speed to ${rechargeSpeed + 1} per second`,
       image: energy,
@@ -48,7 +48,7 @@ export default function BoostsComponent() {
     },
     {
       name: "Hire Miner",
-      price: `$${manager.level === 0 ? 1000 : 2000 * Math.pow(2, manager.level + 1)}`,
+      price: `$ ${parsePoints(calculateCost(100, managerPrice())).value} ${parsePoints(calculateCost(100, managerPrice())).units ? ' ' + parsePoints(calculateCost(100, managerPrice())).units : ''}`,
       // price: `$${manager.level === 0 ? 5000 : 10000 * Math.pow(2, manager.level + 1)}`,
       level: `LVL ${manager.level + 1}`,
       desc: `Miner would mine on your behalf when there is energy for ${manager.level + 1}mins every trigger.`,
@@ -57,6 +57,10 @@ export default function BoostsComponent() {
       ref: "manager"
     },
   ];
+
+  function managerPrice(){
+    return manager.level === 0 ? 1000 : 2000 * Math.pow(2, manager.level + 1)
+  }
 
   function handleTurboBoost() {
     setModalContent({
@@ -115,7 +119,7 @@ export default function BoostsComponent() {
               mt-2
               flex justify-center items-center"
           >
-            <span className="ml-2 text-white text-4xl">{parsePoints(points).value}{parsePoints(points).units ? ' ' + parsePoints(points).units : ''}</span>
+            <span className="ml-2 text-white text-4xl">$ {formatNumberWithCommas(points)}</span>
           </div>
         </div>
         <div className="fixed top-24 w-[90%] max-w-md mx-auto z-50 flex flex-col">

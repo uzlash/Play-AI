@@ -2,7 +2,8 @@
 import ButtomNav from "./Navbar/ButtomNav";
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import useGame, { parsePoints } from "../states/useGame";
+import useGame from "../states/useGame";
+import { formatNumberWithCommas } from "../utils";
 import ManagerButton from "./manager";
 import TurboButton from "./Turbo";
 
@@ -104,7 +105,7 @@ export default function Game() {
               flex justify-center items-center
               "
           >
-            <span className="ml-2 text-white">{parsePoints(points).value}{parsePoints(points).units ? ' ' + parsePoints(points).units : ''}</span>
+            <span className="ml-2 text-white">$ {formatNumberWithCommas(points)}</span>
           </div>
         </div>
         <div className="fixed top-[100px]  max-w-md  w-[90%]  mx-auto z-50 flex justify-center">

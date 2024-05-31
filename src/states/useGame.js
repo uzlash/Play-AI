@@ -36,9 +36,39 @@ const gameStat = {
   turboActive: false,
   turboDamageEndAt: 0,
   turboDamageMultiplier: 10,
+  lastDailyRewardsClaim: 0,
+  dailyRewardsDaysClaimed: 0
 };
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+const claimDailyRewards = (state) => {
+  const now = Date.now();
+  const lastClaimDate = new Date(state.lastDailyRewardsClaim);
+  const currentDate = new Date(now);
+
+  if (lastClaimDate.getDate() !== currentDate.getDate() ||
+    lastClaimDate.getMonth() !== currentDate.getMonth() ||
+    lastClaimDate.getFullYear() !== currentDate.getFullYear()) {
+    let newDaysClaimed;
+
+    if (now - state.lastDailyRewardsClaim > ONE_DAY_MS * state.dailyRewardsDaysClaimed || state.dailyRewardsDaysClaimed >= config.dailyRewards.length) {
+      newDaysClaimed = 1;
+    } else {
+      newDaysClaimed = state.dailyRewardsDaysClaimed + 1;
+    }
+
+    const reward = config.dailyRewards[newDaysClaimed - 1];
+    return {
+      ...state,
+      points: state.points + reward,
+      dailyRewardsDaysClaimed: newDaysClaimed,
+      lastDailyRewardsClaim: now,
+    };
+  }
+
+  return state;
+};
 
 const advanceLevel = (state, newPoints) => {
   let { currentLevel, levelData } = state;
@@ -110,37 +140,6 @@ const updateStateWithLevel = (state, newPoints, newLevelDataPoints, newEnergy) =
   };
 };
 
-
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD'
-});
-
-const millionUnits = [
-  '',
-  'million',
-  'billion',
-  'trillion',
-  'quatrillion'
-]
-
-export function parsePoints(points) {
-  let value = points
-  let million = 0
-  if (value > 1000000) {
-    value /= 1000000
-    million += 1
-    while (value / 1000 > 1) {
-      value /= 1000
-      million += 1
-    }
-  }
-
-  return {
-    value: formatter.format(value),
-    units: millionUnits[million]
-  }
-}
 
 export default create(
   persist(
@@ -326,8 +325,20 @@ export default create(
           }));
         }
       },
+      dailyRewardsClaim: () => {
+        set((state) => {
+          const newState = claimDailyRewards(state);
+          return newState;
+        });
+      },
+      claimSpecialReward: (amount) => {
+        set((state) => ({
+          ...state,
+          points: state.points + amount
+        }))
+      },
       managerTap: () => {
-        const { manager, managerActive, energy, energyCap, levelData,  damage, rechargeSpeed } = get();
+        const { manager, managerActive, energy, energyCap, levelData, damage, rechargeSpeed } = get();
         const now = Date.now();
         if (!managerActive) return;
 
@@ -373,6 +384,89 @@ export default create(
     }
   )
 );
+
+export const config = {
+  levels: [
+    {
+      level: 1,
+      maxPoints: 5000,
+      name: 'Normies',
+      desc: ' ',
+      bonus: 10000
+    },
+    {
+      level: 2,
+      maxPoints: 200000,
+      name: 'Cadet',
+      desc: ' ',
+      bonus: 50000
+    },
+    {
+      level: 3,
+      maxPoints: 2000000,
+      name: 'Officer',
+      desc: ' ',
+      bonus: 100000
+    },
+    {
+      level: 4,
+      maxPoints: 3000000,
+      name: 'Lieutenant',
+      desc: ' ',
+      bonus: 500000
+    },
+    {
+      level: 5,
+      maxPoints: 4000000,
+      name: 'Captain',
+      desc: ' ',
+      bonus: 1000000
+    },
+    {
+      level: 6,
+      maxPoints: 6000000,
+      name: 'Major',
+      desc: ' ',
+      bonus: 1500000
+    },
+    {
+      level: 7,
+      maxPoints: 8000000,
+      name: 'Colonel',
+      desc: ' ',
+      bonus: 2000000
+    },
+    {
+      level: 8,
+      maxPoints: 10000000,
+      name: 'Brigadier',
+      desc: ' ',
+      bonus: 3000000
+    },
+    {
+      level: 9,
+      maxPoints: 13000000,
+      name: 'General',
+      desc: ' ',
+      bonus: 4500000
+    },
+    {
+      level: 10,
+      maxPoints: 16000000,
+      name: 'Field Marshal',
+      desc: ' ',
+      bonus: 6000000
+    },
+    {
+      level: 11,
+      maxPoints: 20000000,
+      name: 'CHAD',
+      desc: ' ',
+      bonus: 8000000
+    }
+  ],
+  dailyRewards: [500, 1000, 2500, 5000, 15000, 25000, 100000, 500000, 1000000, 5000000]
+}
 
 // export default create(
 //   persist(
@@ -790,87 +884,3 @@ export default create(
 //     }
 //   )
 // );
-
-const config = {
-  levels: [
-    {
-      level: 1,
-      maxPoints: 5000,
-      name: 'Normies',
-      desc: ' ',
-      bonus: 10000
-    },
-    {
-      level: 2,
-      maxPoints: 200000,
-      name: 'Cadet',
-      desc: ' ',
-      bonus: 50000
-    },
-    {
-      level: 3,
-      maxPoints: 2000000,
-      name: 'Officer',
-      desc: ' ',
-      bonus: 100000
-    },
-    {
-      level: 4,
-      maxPoints: 3000000,
-      name: 'Lieutenant',
-      desc: ' ',
-      bonus: 500000
-    },
-    {
-      level: 5,
-      maxPoints: 4000000,
-      name: 'Captain',
-      desc: ' ',
-      bonus: 1000000
-    },
-    {
-      level: 6,
-      maxPoints: 6000000,
-      name: 'Major',
-      desc: ' ',
-      bonus: 1500000
-    },
-    {
-      level: 7,
-      maxPoints: 8000000,
-      name: 'Colonel',
-      desc: ' ',
-      bonus: 2000000
-    },
-    {
-      level: 8,
-      maxPoints: 10000000,
-      name: 'Brigadier',
-      desc: ' ',
-      bonus: 3000000
-    },
-    {
-      level: 9,
-      maxPoints: 13000000,
-      name: 'General',
-      desc: ' ',
-      bonus: 4500000
-    },
-    {
-      level: 10,
-      maxPoints: 16000000,
-      name: 'Field Marshal',
-      desc: ' ',
-      bonus: 6000000
-    },
-    {
-      level: 11,
-      maxPoints: 20000000,
-      name: 'CHAD',
-      desc: ' ',
-      bonus: 8000000
-    }
-  ],
-  dailyRewards: [500, 1000, 2500, 5000, 15000, 25000, 100000, 500000, 1000000, 5000000]
-}
-
