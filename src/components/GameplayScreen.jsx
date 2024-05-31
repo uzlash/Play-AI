@@ -1,91 +1,80 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import ButtomNav from "./Navbar/ButtomNav";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import useGame from "../states/useGame";
+import { useRef, useState } from "react";
+import useGame, { parsePoints } from "../states/useGame";
 import ManagerButton from "./manager";
 import TurboButton from "./Turbo";
 
 export default function Game() {
   const route = useNavigate()
-  const { points, damage, levelData, freeBoosts, activateTurbo, turboTap, turboDamageMultiplier, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap } = useGame();
-  const [showManagerButton, setShowManagerButton] = useState(false);
+  const { points, damage, levelData, freeBoosts, activateTurbo, turboTap, turboDamageMultiplier, manager, tap, startManager, energy, energyCap, turboActive, managerActive } = useGame();
   const [tapEffects, setTapEffects] = useState([]);
-  const [playAnime, setPlayAnime] = useState(false);
+  const [idle, setIdle] = useState(true);
+  const idleTimeoutRef = useRef(null);
 
+  function resetIdleTimeout() {
+    if (idleTimeoutRef.current) {
+      clearTimeout(idleTimeoutRef.current);
+    }
+    idleTimeoutRef.current = setTimeout(() => setIdle(true), 2250);
+  }
 
-  function handleTap(e) {
-    if (energy > damage) {
-      const touches = e.touches;
+  function createTapEffect(id, x, y, damage) {
+    return { id, x, y, damage };
+  }
+  
+  function handleTapOrClick(e, isTurbo, isMultiTouch) {
+    e.preventDefault();
+    if (energy > damage || isTurbo) {
+      setIdle(false);
       const newTapEffects = [];
-
-      for (let i = 0; i < touches.length; i++) {
-        const touch = touches[i];
+      const touchList = isMultiTouch ? e.touches : [e];
+      const effectDamage = isTurbo ? damage * turboDamageMultiplier : damage;
+      const tapAction = isTurbo ? turboTap : tap;
+  
+      for (let i = 0; i < touchList.length; i++) {
+        const touch = touchList[i];
         const x = touch.clientX;
         const y = touch.clientY;
-        const newTapEffect = {
-          id: Date.now() + i,
-          x,
-          y,
-          damage: turboActive ? (damage * turboDamageMultiplier) : damage
-        };
+        const newTapEffect = createTapEffect(Date.now() + i, x, y, effectDamage);
         newTapEffects.push(newTapEffect);
-        turboActive ? turboTap() : tap()
+        tapAction();
       }
-      setTapEffects([...tapEffects, ...newTapEffects]);
-
+  
+      setTapEffects((prevEffects) => [...prevEffects, ...newTapEffects]);
+  
       setTimeout(() => {
         setTapEffects((effects) => effects.filter((effect) => !newTapEffects.includes(effect)));
       }, 1000);
-
-      setPlayAnime(true);
-      setTimeout(() => setPlayAnime(false), 2000);
+  
+      resetIdleTimeout();
     }
   }
-
+  
+  function handleTap(e) {
+    handleTapOrClick(e, false, true);
+  }
+  
+  function handleTurboTap(e) {
+    handleTapOrClick(e, true, true);
+  }
+  
   function handleClick(e) {
-    const x = e.clientX;
-    const y = e.clientY;
-    const newTapEffect = {
-      id: Date.now(),
-      x,
-      y,
-      damage: turboActive ? (damage * turboDamageMultiplier) : damage
-    };
-
-    turboActive ? turboTap() : tap()
-    setTapEffects([...tapEffects, newTapEffect]);
-
-    setTimeout(() => {
-      setTapEffects((effects) => effects.filter((effect) => effect.id !== newTapEffect.id));
-    }, 1000);
+    handleTapOrClick(e, false, false);
+  }
+  
+  function handleTurboClick(e) {
+    handleTapOrClick(e, true, false);
   }
 
   function handleActivateManger() {
-    setShowManagerButton(false);
-    console.log(managerActive)
     startManager()
   }
 
   function handleActivateTurbo() {
-    console.log(freeBoosts.turboActivePurchase)
     activateTurbo()
   }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (managerActive) {
-        setShowManagerButton(false);
-      } else {
-        if (manager.level > 0) {
-          setShowManagerButton(true);
-        }
-      }
-    }, 999);
-
-    return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <section className="h-screen bg-[#A86A4B]">
@@ -115,7 +104,7 @@ export default function Game() {
               flex justify-center items-center
               "
           >
-            <span className="ml-2 text-white">$ {points}</span>
+            <span className="ml-2 text-white">{parsePoints(points).value}{parsePoints(points).units ? ' ' + parsePoints(points).units : ''}</span>
           </div>
         </div>
         <div className="fixed top-[100px]  max-w-md  w-[90%]  mx-auto z-50 flex justify-center">
@@ -187,7 +176,7 @@ export default function Game() {
           </div>
         </div>
         <div className="fixed top-[200px] max-w-md w-[90%] items-center mx-auto z-50 flex justify-center ">
-          <img onTouchStart={handleTap} onClick={handleClick} className="self-center" src="/robot.png" height="auto" width={'auto'} />
+          <img onTouchStart={turboActive ? handleTurboTap : handleTap} onClick={turboActive ? handleTurboClick : handleClick} className="self-center transition-all" src={(idle && !managerActive) ? "/loader.gif" : "/miner.gif"} height="auto" width={'auto'} />
         </div>
         <div className="flex z-50 bottom-28 max-w-md  w-[90%] mx-auto fixed justify-center">
           <div
@@ -224,7 +213,7 @@ export default function Game() {
           </div>
         </div>
         <ButtomNav />
-        {showManagerButton && <ManagerButton show={showManagerButton} onTouchStart={handleActivateManger} />}
+        {manager.level > 0 && !managerActive && <ManagerButton show={manager.level > 0 && !managerActive} onTouchStart={handleActivateManger} />}
         {freeBoosts.turboActivePurchase && <TurboButton show={freeBoosts.turboActivePurchase} onTouchStart={handleActivateTurbo} />}
         {tapEffects.map((effect) => (
           <div

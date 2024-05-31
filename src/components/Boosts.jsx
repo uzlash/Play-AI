@@ -1,7 +1,7 @@
 "use client";
 import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import useGame from "../states/useGame";
+import useGame, { parsePoints } from "../states/useGame";
 
 import ButtomNav from "./Navbar/ButtomNav";
 import sword from "../assets/sword.svg";
@@ -17,7 +17,7 @@ export default function BoostsComponent() {
   const calculateCost = (baseCost, currentLevel) => {
     return currentLevel === 1 ? baseCost : 1000 * Math.pow(2, currentLevel - 1);
   };
-
+  
   const boosts = [
     {
       name: "Multi Slash",
@@ -115,7 +115,7 @@ export default function BoostsComponent() {
               mt-2
               flex justify-center items-center"
           >
-            <span className="ml-2 text-white text-4xl">$ {points}</span>
+            <span className="ml-2 text-white text-4xl">{parsePoints(points).value}{parsePoints(points).units ? ' ' + parsePoints(points).units : ''}</span>
           </div>
         </div>
         <div className="fixed top-24 w-[90%] max-w-md mx-auto z-50 flex flex-col">
@@ -196,7 +196,7 @@ export default function BoostsComponent() {
         </div>
         <div className="flex pt-64 w-full justify-center">
           <div
-            className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[314px] bg-gray-950 overflow-y-auto"
+            className="w-[90%] max-w-md border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[314px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}
           >
             {boosts.map((e, i) => (

@@ -34,7 +34,7 @@ const TaskComponent = () => {
           </div></div>
         <div className="pt-16 flex w-full justify-center">
           <div
-            className="w-5/6 border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[400px] bg-gray-950 overflow-y-auto"
+            className="w-[90%] max-w-md border-[1px] border-[#a86a4b] mt-4 mb-2 rounded-md h-[400px] bg-gray-950 overflow-y-auto"
             style={{ zIndex: 1 }}
           >
             {boosts.map((e, i) => (

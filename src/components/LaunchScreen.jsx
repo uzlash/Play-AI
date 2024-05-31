@@ -7,7 +7,7 @@ export default function LaunchScreen() {
   //TODO: hnadlebutton clicks with tg api
   return (
     <section className="min-h-screen bg-[#A86A4B]">
-      <div className="min-h-screen h-fit relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
+      <div className="max-h-screen h-screen flex flex-col items-center relative mx-auto max-w-screen-sm bg-[url('/bg-main.jpeg')] bg-no-repeat bg-cover bg-center bg-gray-500 bg-blend-multiply">
         <div className="flex justify-center" style={{ zIndex: 1 }}>
           <img src="/robot.svg" height={325} width={325} />
         </div>
@@ -20,7 +20,7 @@ export default function LaunchScreen() {
             Are you ready to make a difference while having fun? Start tapping
             and training our AI bot today!
           </p>
-          <div className="z-50 max-w-md  w-[90%] fixed bottom-10 flex flex-col mx-auto justify-center items-center">
+          <div className="z-50 max-w-[576px] w-[90%] fixed bottom-10 flex flex-col mx-auto justify-center items-center">
             <MainBtn text={'Start Game'} onClick={() => route("/play")} />
             <div
               style={{ zIndex: 1 }}

@@ -8,11 +8,32 @@ import {
 } from 'react-router-dom';
 import "./App.css";
 import useGame from "./states/useGame";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingScreen from "./components/LoadingScreen";
 
 function App() {
   const { points, damage, levelData, freeBoosts, activateTurbo, turboTap, turboDamageMultiplier, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap } = useGame();
+  const [loadingImages, setLoadingImage] = useState();
+  
+  useEffect(() => {
+    const preloadImages = (urls) => {
+      let loadedCount = 0;
+      const total = urls.length;
 
+      urls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount === total) {
+            setLoadingImage(false);
+          }
+        };
+      });
+    };
+
+    preloadImages(['/loader.gif', '/miner.gif']);
+  }, []);
   useEffect(() => {
     console.log({ points, damage, levelData, freeBoosts, activateTurbo, turboTap, turboDamageMultiplier, manager, tap, recharge, rechargeTurbo, rechargeRefill, startManager, energy, energyCap, turboActive, managerActive, managerTap })
     const intervalId = setInterval(() => {
@@ -41,6 +62,9 @@ function App() {
       }
     };
   }, [managerActive, managerTap]);
+
+
+  if(loadingImages) return <LoadingScreen />;
 
   return (
     <>
